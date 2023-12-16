@@ -15,7 +15,7 @@ export default function HomeLayout() {
           collapsed={collapsed}
           callback={() => setCollapsed(!collapsed)}
         />
-        <Layout.Content className="flex-1">
+        <Layout.Content className="flex-1 p-4 overflow-y-auto">
           <Outlet />
         </Layout.Content>
       </Layout>

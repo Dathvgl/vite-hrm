@@ -9,7 +9,7 @@ import LoginPage from "~/routes/LoginPage";
 import CompanyPage from "~/routes/home/CompanyManagement/CompanyPage";
 import PersonnelPage from "~/routes/home/CompanyManagement/PersonnelPage";
 import HomePage from "~/routes/home/HomePage";
-import PersonnelManagementPage from "~/routes/home/PersonnelManagementPage";
+import PersonnelManagementPage from "~/routes/home/PersonnelManagement/PersonnelManagementPage";
 import SalaryCalculatorPage from "~/routes/home/SalaryCalculatorPage";
 import VacationPage from "~/routes/home/VacationPage";
 
