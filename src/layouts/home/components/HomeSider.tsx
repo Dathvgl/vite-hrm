@@ -9,14 +9,20 @@ import {
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useSessionStorage } from "usehooks-ts";
 
 export default function HomeSider({ collapsed }: { collapsed: boolean }) {
   const navigate = useNavigate();
+  const [selectedKeys, setSelectedKeys] = useSessionStorage("menu-select", [
+    "",
+  ]);
 
   function onSelect({ keyPath }: { keyPath: string[] }) {
     const join = keyPath.reverse().join("/");
     const path = "/home" + (join == "" ? "" : `/${join}`);
+
     navigate(path);
+    setSelectedKeys(keyPath);
   }
 
   return (
@@ -31,7 +37,7 @@ export default function HomeSider({ collapsed }: { collapsed: boolean }) {
         theme="dark"
         mode="inline"
         onSelect={onSelect}
-        defaultSelectedKeys={[""]}
+        selectedKeys={selectedKeys}
         defaultOpenKeys={["company-management"]}
         items={[
           {
