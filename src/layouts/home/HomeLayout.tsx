@@ -10,12 +10,12 @@ export default function HomeLayout() {
   return (
     <Layout className="h-screen">
       <HomeSider collapsed={collapsed} />
-      <Layout>
+      <Layout className="flex">
         <HomeHeader
           collapsed={collapsed}
           callback={() => setCollapsed(!collapsed)}
         />
-        <Layout.Content>
+        <Layout.Content className="flex-1">
           <Outlet />
         </Layout.Content>
       </Layout>

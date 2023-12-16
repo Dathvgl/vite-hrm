@@ -1,3 +1,7 @@
+import { Empty } from "antd";
+
 export default function HomePage() {
-  return <div>HomePage</div>;
+  return (
+    <Empty className="h-full [&_.ant-empty-image]:h-full" description={false} />
+  );
 }
