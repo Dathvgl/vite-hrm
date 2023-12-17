@@ -82,7 +82,7 @@ export default function CompanyList() {
         ]}
         dataSource={data.map((item, index) => ({
           ...item,
-          key: index.toString(),
+          key: index,
         }))}
       />
     </>
