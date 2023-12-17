@@ -1,10 +1,17 @@
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+} from "firebase/firestore";
 import { CompanyType } from "~/types/company";
 import { storeFB } from "~/utils/firebase";
 
 export const companyApi = createApi({
   reducerPath: "companyApi",
+  tagTypes: ["Companies"],
   baseQuery: fakeBaseQuery(),
   endpoints: (builder) => ({
     getCompanies: builder.query<CompanyType[], void>({
@@ -22,6 +29,14 @@ export const companyApi = createApi({
           return { error: "Lỗi get companies" };
         }
       },
+      providesTags: (result) => {
+        if (result) {
+          return [
+            ...result.map(({ id }) => ({ type: "Companies" as const, id })),
+            { type: "Companies" as const, id: "LIST" },
+          ];
+        } else return [{ type: "Companies" as const, id: "LIST" }];
+      },
     }),
     postCompany: builder.mutation<string, CompanyType>({
       queryFn: async (arg) => {
@@ -32,8 +47,24 @@ export const companyApi = createApi({
           return { error: "Lỗi post company" };
         }
       },
+      invalidatesTags: () => [{ type: "Companies", id: "LIST" }],
+    }),
+    deleteCompany: builder.mutation<string, string>({
+      queryFn: async (arg) => {
+        try {
+          await deleteDoc(doc(storeFB, "companies", arg));
+          return { data: "Xóa thành công" };
+        } catch (error) {
+          return { error: "Lỗi delete company" };
+        }
+      },
+      invalidatesTags: (_, __, id) => [{ type: "Companies", id }],
     }),
   }),
 });
 
-export const { useGetCompaniesQuery, usePostCompanyMutation } = companyApi;
+export const {
+  useGetCompaniesQuery,
+  usePostCompanyMutation,
+  useDeleteCompanyMutation,
+} = companyApi;
