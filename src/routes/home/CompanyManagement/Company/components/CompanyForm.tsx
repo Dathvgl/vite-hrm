@@ -41,11 +41,11 @@ export default function CompanyForm() {
     };
 
     try {
-      const result = await postCompany(data).unwrap();
+      await postCompany(data).unwrap();
 
       messageApi.open({
         type: "success",
-        content: result,
+        content: "Tạo thành công",
       });
 
       handleOk();
