@@ -14,7 +14,7 @@ import PersonnelPage from "~/routes/home/CompanyManagement/Personnel/PersonnelPa
 import HomePage from "~/routes/home/HomePage";
 import PersonnelManagementPage from "~/routes/home/PersonnelManagement/PersonnelManagementPage";
 import SalaryCalculatorPage from "~/routes/home/SalaryCalculatorPage";
-import VacationPage from "~/routes/home/VacationPage";
+import VacationPage from "~/routes/home/Vacation/VacationPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

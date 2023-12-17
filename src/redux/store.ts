@@ -10,8 +10,9 @@ import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import storage from "redux-persist/lib/storage";
 import { companyApi } from "./company/companyApi";
 import { personnelApi } from "./personnel/personnelApi";
-import rootReducer, { RootReducer } from "./root";
 import { personnelSlice } from "./personnel/personnelSlice";
+import rootReducer, { RootReducer } from "./root";
+import { vacationApi } from "./vacation/vacationApi";
 
 const persistConfig: PersistConfig<RootReducer> = {
   key: "root",
@@ -34,7 +35,8 @@ export const store = configureStore({
       },
     })
       .concat(companyApi.middleware)
-      .concat(personnelApi.middleware),
+      .concat(personnelApi.middleware)
+      .concat(vacationApi.middleware),
 });
 
 export const persistor = persistStore(store);
