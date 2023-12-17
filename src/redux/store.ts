@@ -3,6 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { PERSIST, persistReducer, persistStore } from "redux-persist";
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import storage from "redux-persist/lib/storage";
+import { companyApi } from "./company/companyApi";
 import rootReducer, { RootReducer } from "./root";
 
 const persistConfig = {
@@ -23,7 +24,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [PERSIST],
       },
-    }),
+    }).concat(companyApi.middleware),
 });
 
 export const persistor = persistStore(store);
