@@ -10,7 +10,7 @@ import { persistor, store } from "~/redux/store";
 import ErrorPage from "~/routes/ErrorPage";
 import LoginPage from "~/routes/LoginPage";
 import CompanyPage from "~/routes/home/CompanyManagement/Company/CompanyPage";
-import PersonnelPage from "~/routes/home/CompanyManagement/PersonnelPage";
+import PersonnelPage from "~/routes/home/CompanyManagement/Personnel/PersonnelPage";
 import HomePage from "~/routes/home/HomePage";
 import PersonnelManagementPage from "~/routes/home/PersonnelManagement/PersonnelManagementPage";
 import SalaryCalculatorPage from "~/routes/home/SalaryCalculatorPage";

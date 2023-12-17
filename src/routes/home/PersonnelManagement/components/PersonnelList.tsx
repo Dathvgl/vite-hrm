@@ -1,75 +1,85 @@
+import { ReloadOutlined } from "@ant-design/icons";
+import { Button, message } from "antd";
 import Table from "antd/es/table";
-
-interface DataType {
-  key: string;
-  stt: number;
-  fullname: string;
-  position: string;
-  department: string;
-  phone: string;
-  birth: string;
-  address: string;
-  email: string;
-}
-
-const data: Omit<DataType, "key">[] = [
-  {
-    stt: 0,
-    fullname: "The Fool",
-    position: "Nhân viên",
-    department: "Phòng thường",
-    phone: "0123456789",
-    birth: "01/02/2001",
-    address: "The Fool address is where long long long test",
-    email: "fool@gmail.com",
-  },
-  {
-    stt: 1,
-    fullname: "The Magician",
-    position: "Nhân viên",
-    department: "Phòng thường",
-    phone: "0987654321",
-    birth: "02/03/2001",
-    address: "The Magician address is where long long long test",
-    email: "magician@gmail.com",
-  },
-  {
-    stt: 2,
-    fullname: "The Chariot",
-    position: "Nhân viên",
-    department: "Phòng thường",
-    phone: "0159753456",
-    birth: "03/04/2001",
-    address: "The chariot address is where long long long test",
-    email: "chariot@gmail.com",
-  },
-];
+import {
+  useDeletePersonnelMutation,
+  useGetPersonnelsQuery,
+} from "~/redux/personnel/personnelApi";
+import { TableType } from "~/types/base";
+import { PersonnelType } from "~/types/personnel";
 
 export default function PersonnelList() {
+  const { data = [], refetch } = useGetPersonnelsQuery();
+  const [deletePersonnel] = useDeletePersonnelMutation();
+  const [messageApi, contextHolder] = message.useMessage();
+
+  async function onDelete(id: string) {
+    try {
+      await deletePersonnel(id).unwrap();
+
+      messageApi.open({
+        type: "success",
+        content: "Xóa thành công",
+      });
+    } catch (error) {
+      messageApi.open({
+        type: "error",
+        content: "Xóa thất bại",
+      });
+    }
+  }
+
   return (
-    <Table<DataType>
-      bordered
-      scroll={{ x: 1200 }}
-      pagination={{ pageSize: 5 }}
-      columns={[
-        {
-          key: "stt",
-          title: "STT",
-          dataIndex: "stt",
-          render: (text) => <div className="text-center">{text}</div>,
-        },
-        { key: "fullname", title: "Họ tên NV", dataIndex: "fullname" },
-        { key: "position", title: "Chức vụ", dataIndex: "position" },
-        { key: "department", title: "Phòng ban", dataIndex: "department" },
-        { key: "phone", title: "Số điện thoại", dataIndex: "phone" },
-        { key: "birth", title: "Ngày sinh", dataIndex: "birth" },
-        { key: "address", title: "Địa chỉ", dataIndex: "address" },
-        { key: "email", title: "Email", dataIndex: "email" },
-      ]}
-      dataSource={data.map((item, index) => ({
-        ...item,
-        key: index.toString(),
-      }))}
-    />
+    <>
+      {contextHolder}
+      <Table<TableType<PersonnelType>>
+        bordered
+        scroll={{ x: 1200 }}
+        pagination={{ pageSize: 5 }}
+        columns={[
+          {
+            key: "key",
+            title: (
+              <div className="flex justify-center items-center gap-3">
+                <ReloadOutlined
+                  className="transition-all hover:rotate-180 hover:!text-cyan-500"
+                  onClick={refetch}
+                />
+                <span>STT</span>
+              </div>
+            ),
+            width: 80,
+            dataIndex: "key",
+            align: "center",
+            rowScope: "row",
+            render: (text) => <div className="text-center">{text}</div>,
+          },
+          { key: "fullname", title: "Họ tên NV", dataIndex: "fullname" },
+          { key: "position", title: "Chức vụ", dataIndex: "position" },
+          { key: "department", title: "Phòng ban", dataIndex: "department" },
+          { key: "phone", title: "Số điện thoại", dataIndex: "phone" },
+          { key: "birth", title: "Ngày sinh", dataIndex: "birth" },
+          { key: "address", title: "Địa chỉ", dataIndex: "address" },
+          { key: "email", title: "Email", dataIndex: "email" },
+          {
+            key: "actions",
+            title: "Thao tác",
+            dataIndex: "actions",
+            width: 100,
+            align: "center",
+            fixed: "right",
+            render: (_, { id }) => (
+              <Button danger onClick={() => onDelete(id)}>
+                Xóa
+              </Button>
+            ),
+          },
+        ]}
+        dataSource={data.map((item, index) => ({
+          ...item,
+          key: index.toString(),
+        }))}
+      />
+    </>
   );
 }

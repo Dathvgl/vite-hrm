@@ -6,7 +6,7 @@ type FieldType = {
   phone?: string;
 };
 
-export default function PersonnelForm() {
+export default function PersonnelSearchForm() {
   const { token } = theme.useToken();
   const [form] = Form.useForm();
 
