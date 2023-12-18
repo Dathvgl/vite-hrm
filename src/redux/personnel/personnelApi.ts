@@ -99,7 +99,7 @@ export const personnelApi = createApi({
       ],
     }),
     deletePersonnel: builder.mutation<string, string>({
-      queryFn: async (arg) => {
+      queryFn: async (_) => {
         try {
           // await deleteDoc(doc(storeFB, "personnels", arg));
           return { data: "Xóa thành công" };
