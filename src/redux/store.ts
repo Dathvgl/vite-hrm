@@ -12,12 +12,13 @@ import { companyApi } from "./company/companyApi";
 import { personnelApi } from "./personnel/personnelApi";
 import { personnelSlice } from "./personnel/personnelSlice";
 import rootReducer, { RootReducer } from "./root";
+import { salarySlice } from "./salary/salaryApi";
 import { vacationApi } from "./vacation/vacationApi";
 
 const persistConfig: PersistConfig<RootReducer> = {
   key: "root",
   storage,
-  blacklist: [personnelSlice.reducerPath],
+  blacklist: [personnelSlice.reducerPath, salarySlice.reducerPath],
   stateReconciler: autoMergeLevel2,
 };
 

@@ -14,7 +14,7 @@ import CompanyPage from "~/routes/home/CompanyManagement/Company/CompanyPage";
 import PersonnelPage from "~/routes/home/CompanyManagement/Personnel/PersonnelPage";
 import HomePage from "~/routes/home/HomePage";
 import PersonnelManagementPage from "~/routes/home/PersonnelManagement/PersonnelManagementPage";
-import SalaryCalculatorPage from "~/routes/home/SalaryCalculatorPage";
+import SalaryCalculatorPage from "~/routes/home/SalaryCalculator/SalaryCalculatorPage";
 import VacationPage from "~/routes/home/Vacation/VacationPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
