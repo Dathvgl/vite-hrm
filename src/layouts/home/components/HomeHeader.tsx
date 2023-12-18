@@ -22,6 +22,10 @@ export default function HomeHeader({ collapsed, callback }: HomeHeaderProps) {
 
   const user = useAppSelector((state) => state.personnelSlice.user);
 
+  function onSignOut() {
+    signOut(authFB);
+  }
+
   return (
     <Layout.Header className="px-4" style={{ background: colorBgContainer }}>
       <Flex justify="space-between" align="center">
@@ -45,7 +49,7 @@ export default function HomeHeader({ collapsed, callback }: HomeHeaderProps) {
                 },
                 {
                   key: "2",
-                  label: <span onClick={() => signOut(authFB)}>Đăng xuất</span>,
+                  label: <span onClick={onSignOut}>Đăng xuất</span>,
                 },
               ],
             }}

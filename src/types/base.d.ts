@@ -3,3 +3,7 @@ export type TableType<T> = T & {
 };
 
 export type ReactFaCC<T> = (props: T) => JSX.Element;
+
+export type OnlyChild = {
+  children: React.ReactNode;
+};

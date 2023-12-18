@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { PersonnelType } from "~/types/personnel";
 import { authFB, storeFB } from "~/utils/firebase";
-import { PersonnelTransferType, initUser } from "./personnelSlice";
+import { PersonnelTransferType } from "./personnelSlice";
 
 export const personnelApi = createApi({
   reducerPath: "personnelApi",
@@ -44,22 +44,14 @@ export const personnelApi = createApi({
         } else return [{ type: "Personnels" as const, id: "LIST" }];
       },
     }),
-    getPersonnel: builder.query<PersonnelType, string | undefined>({
+    getPersonnel: builder.query<PersonnelType | null, string | undefined>({
       queryFn: async (arg) => {
-        if (!arg) return { error: "Lỗi get personnel" };
+        if (!arg) return { data: null };
         try {
           const docSnap = await getDoc(doc(storeFB, "personnels", arg));
           return { data: { ...docSnap.data(), id: arg } as PersonnelType };
         } catch (error) {
           return { error: "Lỗi get personnel" };
-        }
-      },
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(initUser(data));
-        } catch (error) {
-          dispatch(initUser(null));
         }
       },
       providesTags: (result) => {
