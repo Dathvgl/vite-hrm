@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { authFB } from "~/utils/firebase";
 
 export default function useAuth() {
-  const [state, setState] = useState<User | null>(null);
+  const [state, setState] = useState<User | null | undefined>();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(authFB, (user) => {

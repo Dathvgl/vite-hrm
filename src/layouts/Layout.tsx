@@ -1,22 +1,28 @@
-import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Spin } from "antd";
+import { Navigate, Outlet } from "react-router-dom";
 import useAuth from "~/hooks/useAuth";
 import { useGetPersonnelQuery } from "~/redux/personnel/personnelApi";
 import { useAppSelector } from "~/redux/store";
 
 export default function Layout() {
   const user = useAuth();
-  const navigate = useNavigate();
   const { refetch } = useGetPersonnelQuery(user?.uid);
-
   const userSelect = useAppSelector((state) => state.personnelSlice.user);
 
-  useEffect(() => {
-    if (!userSelect) {
-      if (user) refetch();
-      else navigate("/");
-    } else navigate("/home");
-  }, [user, userSelect]);
+  const loading = (
+    <div className="h-screen flex items-center justify-center">
+      <Spin tip="Loading" size="large">
+        <div className="p-[50px]" />
+      </Spin>
+    </div>
+  );
+
+  if (user == undefined) return <>{loading}</>;
+  if (user == null) return <Navigate to="/" />;
+  if (userSelect == null) {
+    refetch();
+    return <>{loading}</>;
+  }
 
   return <Outlet />;
 }
