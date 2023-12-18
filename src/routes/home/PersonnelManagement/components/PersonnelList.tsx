@@ -1,15 +1,13 @@
 import { ReloadOutlined } from "@ant-design/icons";
 import { Button, message } from "antd";
 import Table from "antd/es/table";
-import {
-  useDeletePersonnelMutation,
-  useGetPersonnelsQuery,
-} from "~/redux/personnel/personnelApi";
+import usePersonnel from "~/hooks/usePersonnel";
+import { useDeletePersonnelMutation } from "~/redux/personnel/personnelApi";
 import { TableType } from "~/types/base";
 import { PersonnelType } from "~/types/personnel";
 
 export default function PersonnelList() {
-  const { data = [], refetch } = useGetPersonnelsQuery();
+  const { data = [], refetch } = usePersonnel();
   const [deletePersonnel] = useDeletePersonnelMutation();
   const [messageApi, contextHolder] = message.useMessage();
 

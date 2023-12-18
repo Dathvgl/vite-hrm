@@ -1,6 +1,6 @@
 import { ReloadOutlined } from "@ant-design/icons";
 import { Table } from "antd";
-import { useGetPersonnelsQuery } from "~/redux/personnel/personnelApi";
+import usePersonnel from "~/hooks/usePersonnel";
 import { transferPersonnelPersonnel } from "~/redux/personnel/personnelSlice";
 import { useAppDispatch } from "~/redux/store";
 import { TableType } from "~/types/base";
@@ -13,7 +13,7 @@ type TablePersonnelType = TableType<{
 
 export default function PersonnelPersonnel() {
   const dispatch = useAppDispatch();
-  const { data = [], refetch: personnelRefetch } = useGetPersonnelsQuery();
+  const { data = [], refetch: personnelRefetch } = usePersonnel();
 
   return (
     <Table<TablePersonnelType>
@@ -38,7 +38,6 @@ export default function PersonnelPersonnel() {
           width: 80,
           dataIndex: "key",
           align: "center",
-          rowScope: "row",
           render: (text) => <div className="text-center">{text}</div>,
         },
         {

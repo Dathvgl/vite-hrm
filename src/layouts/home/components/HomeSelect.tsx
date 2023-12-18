@@ -1,16 +1,19 @@
 import { Select } from "antd";
 import { useGetCompaniesQuery } from "~/redux/company/companyApi";
-import { companySelect } from "~/redux/company/companySlice";
+import { userFilterSelect } from "~/redux/personnel/personnelSlice";
 import { useAppDispatch, useAppSelector } from "~/redux/store";
 
 export default function HomeSelect() {
   const { data = [] } = useGetCompaniesQuery();
 
-  const selection = useAppSelector((state) => state.companySlice.selection);
+  const selection = useAppSelector(
+    (state) => state.personnelSlice.filter.selection
+  );
+
   const dispatch = useAppDispatch();
 
   function onChange(value: string) {
-    dispatch(companySelect(value));
+    dispatch(userFilterSelect(value));
   }
 
   const filterOption = (

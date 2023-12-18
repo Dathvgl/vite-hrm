@@ -1,10 +1,8 @@
 import { Button, Flex, Table, message } from "antd";
 import { useEffect } from "react";
+import usePersonnel from "~/hooks/usePersonnel";
 import { useGetCompaniesQuery } from "~/redux/company/companyApi";
-import {
-  useGetPersonnelsQuery,
-  usePutPersonnelCompaniesMutation,
-} from "~/redux/personnel/personnelApi";
+import { usePutPersonnelCompaniesMutation } from "~/redux/personnel/personnelApi";
 import { transferPersonnelCompany } from "~/redux/personnel/personnelSlice";
 import { useAppDispatch, useAppSelector } from "~/redux/store";
 import { TableType } from "~/types/base";
@@ -19,7 +17,7 @@ export default function PersonnelCompany() {
   const dispatch = useAppDispatch();
 
   const { data: companies = [] } = useGetCompaniesQuery();
-  const { data: personnels = [] } = useGetPersonnelsQuery();
+  const { data: personnels } = usePersonnel();
 
   const [putPersonnelCompanies] = usePutPersonnelCompaniesMutation();
   const [messageApi, contextHolder] = message.useMessage();

@@ -25,6 +25,7 @@ export const personnelApi = createApi({
           const querySnapshot = await getDocs(
             collection(storeFB, "personnels")
           );
+
           querySnapshot.forEach((doc) => {
             data.push({ ...doc.data(), id: doc.id } as PersonnelType);
           });

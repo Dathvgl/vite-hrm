@@ -12,12 +12,12 @@ import {
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useState } from "react";
-import { useGetPersonnelsQuery } from "~/redux/personnel/personnelApi";
+import usePersonnel from "~/hooks/usePersonnel";
 import { usePostVacationMutation } from "~/redux/vacation/vacationApi";
 import { VacationType } from "~/types/vacation";
 
 export default function VacationForm() {
-  const { data = [] } = useGetPersonnelsQuery();
+  const { data = [] } = usePersonnel();
   const [postVacation] = usePostVacationMutation();
 
   const [open, setOpen] = useState(false);
