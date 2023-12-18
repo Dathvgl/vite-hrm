@@ -1,4 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PersonnelType } from "~/types/personnel";
+
+type UserFB = PersonnelType | null;
 
 export type PersonnelTransferType = {
   personnel?: string;
@@ -6,15 +9,22 @@ export type PersonnelTransferType = {
 };
 
 type PersonnelState = {
+  user: UserFB;
   transfer: PersonnelTransferType;
 };
 
-const initialState: PersonnelState = { transfer: { companies: [] } };
+const initialState: PersonnelState = {
+  user: null,
+  transfer: { companies: [] },
+};
 
 export const personnelSlice = createSlice({
   name: "personnelSlice",
   initialState,
   reducers: {
+    initUser: (state, action: PayloadAction<UserFB>) => {
+      state.user = action.payload;
+    },
     transferPersonnelPersonnel: (state, action: PayloadAction<string>) => {
       state.transfer.personnel = action.payload;
     },
@@ -24,5 +34,8 @@ export const personnelSlice = createSlice({
   },
 });
 
-export const { transferPersonnelPersonnel, transferPersonnelCompany } =
-  personnelSlice.actions;
+export const {
+  initUser,
+  transferPersonnelPersonnel,
+  transferPersonnelCompany,
+} = personnelSlice.actions;

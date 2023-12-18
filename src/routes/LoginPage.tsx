@@ -1,19 +1,24 @@
 import { Button, Card, Form, Input, Layout, Space, message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { authFB } from "~/utils/firebase";
 
 type FieldType = {
-  username?: string;
+  email?: string;
   password?: string;
 };
 
 export default function LoginPage() {
-  const navigate = useNavigate();
-
   const [messageApi, contextHolder] = message.useMessage();
 
-  function onFinish(values: FieldType) {
-    console.log("Success:", values);
-    navigate("/home");
+  async function onFinish(values: Required<FieldType>) {
+    try {
+      await signInWithEmailAndPassword(authFB, values.email, values.password);
+    } catch (error) {
+      messageApi.open({
+        type: "error",
+        content: "Đăng nhập thất bại",
+      });
+    }
   }
 
   function onFinishFailed(errorInfo: any) {
@@ -21,7 +26,7 @@ export default function LoginPage() {
 
     messageApi.open({
       type: "error",
-      content: "This is an error message",
+      content: "Đăng nhập thất bại",
     });
   }
 
@@ -38,10 +43,10 @@ export default function LoginPage() {
           >
             <Space size="middle" direction="vertical">
               <Form.Item<FieldType>
-                label="Username"
-                name="username"
+                label="Email"
+                name="email"
                 rules={[
-                  { required: true, message: "Please input your username!" },
+                  { required: true, message: "Please input your email!" },
                 ]}
               >
                 <Input />

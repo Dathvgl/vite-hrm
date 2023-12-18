@@ -4,7 +4,11 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Button, Dropdown, Flex, Layout, Space, theme } from "antd";
+import { signOut } from "firebase/auth";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "~/redux/store";
+import { authFB } from "~/utils/firebase";
+import HomeSelect from "./HomeSelect";
 
 type HomeHeaderProps = {
   collapsed: boolean;
@@ -16,16 +20,21 @@ export default function HomeHeader({ collapsed, callback }: HomeHeaderProps) {
     token: { colorBgContainer },
   } = theme.useToken();
 
+  const user = useAppSelector((state) => state.personnelSlice.user);
+
   return (
-    <Layout.Header style={{ background: colorBgContainer }}>
+    <Layout.Header className="px-4" style={{ background: colorBgContainer }}>
       <Flex justify="space-between" align="center">
-        <Button
-          type="text"
-          icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          onClick={callback}
-        />
         <Space>
-          <strong>Admin</strong>
+          <Button
+            type="text"
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            onClick={callback}
+          />
+          <HomeSelect />
+        </Space>
+        <Space>
+          <strong>{`${user?.fullname} | ${user?.email}`}</strong>
           <Dropdown
             placement="bottomRight"
             menu={{
@@ -36,7 +45,7 @@ export default function HomeHeader({ collapsed, callback }: HomeHeaderProps) {
                 },
                 {
                   key: "2",
-                  label: <Link to="/">Đăng xuất</Link>,
+                  label: <span onClick={() => signOut(authFB)}>Đăng xuất</span>,
                 },
               ],
             }}

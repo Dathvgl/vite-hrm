@@ -1,9 +1,16 @@
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { collection, doc, getDocs, setDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { PersonnelType } from "~/types/personnel";
 import { authFB, storeFB } from "~/utils/firebase";
-import { PersonnelTransferType } from "./personnelSlice";
+import { PersonnelTransferType, initUser } from "./personnelSlice";
 
 export const personnelApi = createApi({
   reducerPath: "personnelApi",
@@ -33,6 +40,30 @@ export const personnelApi = createApi({
             ...result.map(({ id }) => ({ type: "Personnels" as const, id })),
             { type: "Personnels" as const, id: "LIST" },
           ];
+        } else return [{ type: "Personnels" as const, id: "LIST" }];
+      },
+    }),
+    getPersonnel: builder.query<PersonnelType, string | undefined>({
+      queryFn: async (arg) => {
+        if (!arg) return { error: "Lỗi get personnel" };
+        try {
+          const docSnap = await getDoc(doc(storeFB, "personnels", arg));
+          return { data: { ...docSnap.data(), id: arg } as PersonnelType };
+        } catch (error) {
+          return { error: "Lỗi get personnel" };
+        }
+      },
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(initUser(data));
+        } catch (error) {
+          dispatch(initUser(null));
+        }
+      },
+      providesTags: (result) => {
+        if (result) {
+          return [{ type: "Personnels" as const, id: result.id }];
         } else return [{ type: "Personnels" as const, id: "LIST" }];
       },
     }),
@@ -90,6 +121,7 @@ export const personnelApi = createApi({
 
 export const {
   useGetPersonnelsQuery,
+  useGetPersonnelQuery,
   usePostPersonnelMutation,
   usePutPersonnelCompaniesMutation,
   useDeletePersonnelMutation,

@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import "~/index.css";
+import Layout from "~/layouts/Layout";
 import HomeLayout from "~/layouts/home/HomeLayout";
 import { persistor, store } from "~/redux/store";
 import ErrorPage from "~/routes/ErrorPage";
@@ -23,7 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <ConfigProvider>
           <BrowserRouter>
             <Routes>
-              <Route>
+              <Route element={<Layout />}>
                 <Route index element={<LoginPage />} />
                 <Route path="/home" element={<HomeLayout />}>
                   <Route index element={<HomePage />} />
