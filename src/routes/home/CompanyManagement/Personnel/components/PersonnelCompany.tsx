@@ -1,5 +1,6 @@
 import { Button, Flex, Table, message } from "antd";
 import { useEffect } from "react";
+import RoleBased from "~/components/RoleBased";
 import usePersonnel from "~/hooks/usePersonnel";
 import { useGetCompaniesQuery } from "~/redux/company/companyApi";
 import { usePutPersonnelCompaniesMutation } from "~/redux/personnel/personnelApi";
@@ -51,47 +52,54 @@ export default function PersonnelCompany() {
   if (!personnel) return <></>;
 
   return (
-    <Flex vertical gap={12}>
-      {contextHolder}
-      <Table<TableCompanyType>
-        rowSelection={{
-          type: "checkbox",
-          selectedRowKeys: transfer.companies,
-          onChange: (_: React.Key[], selectedRows: TableCompanyType[]) => {
-            dispatch(
-              transferPersonnelCompany(selectedRows.map(({ id }) => id))
-            );
-          },
-        }}
-        columns={[
-          {
-            title: "Danh sách công ty",
-            dataIndex: "name",
-            render: (text, record) => (
-              <span
-                className={
-                  personnel.companies?.includes(record.id)
-                    ? "font-bold text-green-500"
-                    : undefined
-                }
-              >
-                {text}
-              </span>
-            ),
-          },
-        ]}
-        dataSource={companies.map((item) => ({
-          key: item.id,
-          id: item.id,
-          name: item.name,
-        }))}
-        pagination={false}
-      />
-      <div className="text-right">
-        <Button type="primary" onClick={onUpdate}>
-          Cập nhật
-        </Button>
-      </div>
-    </Flex>
+    <RoleBased includes={["boss", "admin"]}>
+      {({ passed }) => (
+        <Flex vertical gap={12}>
+          {contextHolder}
+          <Table<TableCompanyType>
+            rowSelection={{
+              type: "checkbox",
+              selectedRowKeys: transfer.companies,
+              onChange: (_: React.Key[], selectedRows: TableCompanyType[]) => {
+                dispatch(
+                  transferPersonnelCompany(selectedRows.map(({ id }) => id))
+                );
+              },
+              getCheckboxProps: (_) => ({ disabled: !passed }),
+            }}
+            columns={[
+              {
+                title: "Danh sách công ty",
+                dataIndex: "name",
+                render: (text, record) => (
+                  <span
+                    className={
+                      personnel.companies?.includes(record.id)
+                        ? "font-bold text-green-500"
+                        : undefined
+                    }
+                  >
+                    {text}
+                  </span>
+                ),
+              },
+            ]}
+            dataSource={companies.map((item) => ({
+              key: item.id,
+              id: item.id,
+              name: item.name,
+            }))}
+            pagination={false}
+          />
+          {passed && (
+            <div className="text-right">
+              <Button type="primary" onClick={onUpdate}>
+                Cập nhật
+              </Button>
+            </div>
+          )}
+        </Flex>
+      )}
+    </RoleBased>
   );
 }

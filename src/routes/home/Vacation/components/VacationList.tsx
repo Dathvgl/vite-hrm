@@ -1,5 +1,6 @@
 import { ReloadOutlined } from "@ant-design/icons";
 import { Button, Space, Table, Tag, message } from "antd";
+import RoleBased from "~/components/RoleBased";
 import usePersonnel from "~/hooks/usePersonnel";
 import {
   useGetVacationsQuery,
@@ -85,28 +86,34 @@ export default function VacationList() {
             title: "Thao tác",
             dataIndex: "actions",
             render: (_, record) => (
-              <Space>
-                <Button
-                  className={
-                    record.status != "pending"
-                      ? undefined
-                      : "bg-green-500 hover:!bg-green-600"
-                  }
-                  type="primary"
-                  disabled={!(record.status == "pending")}
-                  onClick={() => onAction(record.id, "accept")}
-                >
-                  Chấp nhận
-                </Button>
-                <Button
-                  type="primary"
-                  danger
-                  disabled={!(record.status == "pending")}
-                  onClick={() => onAction(record.id, "refuse")}
-                >
-                  Từ chối
-                </Button>
-              </Space>
+              <RoleBased includes={["boss"]}>
+                {({ passed }) => {
+                  const check = !(record.status == "pending") || !passed;
+
+                  return (
+                    <Space>
+                      <Button
+                        className={
+                          check ? undefined : "bg-green-500 hover:!bg-green-600"
+                        }
+                        type="primary"
+                        disabled={check}
+                        onClick={() => onAction(record.id, "accept")}
+                      >
+                        Chấp nhận
+                      </Button>
+                      <Button
+                        type="primary"
+                        danger
+                        disabled={check}
+                        onClick={() => onAction(record.id, "refuse")}
+                      >
+                        Từ chối
+                      </Button>
+                    </Space>
+                  );
+                }}
+              </RoleBased>
             ),
           },
         ]}
