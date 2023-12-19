@@ -1,10 +1,14 @@
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
   addDoc,
+  arrayRemove,
   collection,
   deleteDoc,
   doc,
   getDocs,
+  query,
+  updateDoc,
+  where,
 } from "firebase/firestore";
 import { CompanyType } from "~/types/company";
 import { storeFB } from "~/utils/firebase";
@@ -52,6 +56,19 @@ export const companyApi = createApi({
     deleteCompany: builder.mutation<string, string>({
       queryFn: async (arg) => {
         try {
+          const querySnapshot = await getDocs(
+            query(
+              collection(storeFB, "personnels"),
+              where("companies", "array-contains", arg)
+            )
+          );
+
+          for (const item of querySnapshot.docs) {
+            await updateDoc(doc(storeFB, "personnels", item.id), {
+              companies: arrayRemove(arg),
+            });
+          }
+
           await deleteDoc(doc(storeFB, "companies", arg));
           return { data: "Xóa thành công" };
         } catch (error) {
