@@ -4,6 +4,7 @@ import { personnelApi } from "./personnel/personnelApi";
 import { personnelSlice } from "./personnel/personnelSlice";
 import { vacationApi } from "./vacation/vacationApi";
 import { salarySlice } from "./salary/salaryApi";
+import { departmentApi } from "./department/departmentApi";
 
 const rootReducer = combineReducers({
   [companyApi.reducerPath]: companyApi.reducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   [personnelSlice.reducerPath]: personnelSlice.reducer,
   [vacationApi.reducerPath]: vacationApi.reducer,
   [salarySlice.reducerPath]: salarySlice.reducer,
+  [departmentApi.reducerPath]: departmentApi.reducer,
 });
 
 export default rootReducer;

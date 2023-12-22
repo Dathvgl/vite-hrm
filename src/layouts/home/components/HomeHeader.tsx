@@ -38,7 +38,7 @@ export default function HomeHeader({ collapsed, callback }: HomeHeaderProps) {
           <HomeSelect />
         </Space>
         <Space>
-          <strong>{`${user?.fullname} | ${user?.email}`}</strong>
+          <strong>{`${user?.name} | ${user?.email}`}</strong>
           <Dropdown
             placement="bottomRight"
             menu={{

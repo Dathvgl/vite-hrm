@@ -8,14 +8,14 @@ import {
   Input,
   Modal,
   Row,
-  message
+  message,
 } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { usePostCompanyMutation } from "~/redux/company/companyApi";
-import { CompanyType } from "~/types/company";
+import { CompanyPostType } from "~/types/company";
 
-type FieldType = Omit<CompanyType, "constructionYear" | "operationYear"> & {
+type FieldType = Omit<CompanyPostType, "constructionYear" | "operationYear"> & {
   constructionYear: dayjs.Dayjs;
   operationYear: dayjs.Dayjs;
 };
@@ -34,7 +34,7 @@ export default function CompanyForm() {
   }
 
   async function onFinish(values: FieldType) {
-    const data: CompanyType = {
+    const data: CompanyPostType = {
       ...values,
       constructionYear: values.constructionYear.format(formatDayjs),
       operationYear: values.operationYear.format(formatDayjs),
@@ -73,10 +73,16 @@ export default function CompanyForm() {
         onCancel={() => setOpen(false)}
         footer={false}
       >
-        <Form form={form} autoComplete="off" onFinish={onFinish}>
+        <Form
+          labelCol={{ span: 6 }}
+          form={form}
+          autoComplete="off"
+          onFinish={onFinish}
+        >
           <Row gutter={24}>
             <Col span={15}>
-              <Form.Item<CompanyType>
+              <Form.Item<CompanyPostType>
+                labelCol={{ span: 10 }}
                 label="Tên CTy"
                 name="name"
                 rules={[{ required: true }]}
@@ -85,7 +91,8 @@ export default function CompanyForm() {
               </Form.Item>
             </Col>
             <Col span={9}>
-              <Form.Item<CompanyType>
+              <Form.Item<CompanyPostType>
+                labelCol={{ span: 10 }}
                 label="Mã CTy"
                 name="code"
                 rules={[{ required: true }]}
@@ -94,7 +101,7 @@ export default function CompanyForm() {
               </Form.Item>
             </Col>
           </Row>
-          <Form.Item<CompanyType>
+          <Form.Item<CompanyPostType>
             label="Địa chỉ"
             name="address"
             rules={[{ required: true }]}
@@ -102,15 +109,17 @@ export default function CompanyForm() {
             <Input placeholder="Địa chỉ" />
           </Form.Item>
           <Row gutter={24}>
-            <Col span={13}>
-              <Form.Item<CompanyType>
+            <Col className="!pl-4" span={16}>
+              <Form.Item<CompanyPostType>
+                labelCol={{ span: 9 }}
                 label="Năm xây dựng"
                 name="constructionYear"
                 rules={[{ required: true }]}
               >
                 <DatePicker format={formatDayjs} />
               </Form.Item>
-              <Form.Item<CompanyType>
+              <Form.Item<CompanyPostType>
+                labelCol={{ span: 9 }}
                 label="Năm vận hành"
                 name="operationYear"
                 rules={[
@@ -131,9 +140,9 @@ export default function CompanyForm() {
                 <DatePicker format={formatDayjs} />
               </Form.Item>
             </Col>
-            <Col className="flex justify-center items-center" span={11}>
+            <Col className="flex justify-center items-center" span={8}>
               <Button type="primary" htmlType="submit">
-                Submit
+                Tạo công ty
               </Button>
             </Col>
           </Row>

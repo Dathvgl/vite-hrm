@@ -1,4 +1,4 @@
-import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import {
   collection,
@@ -9,32 +9,19 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { PersonnelType } from "~/types/personnel";
+import { envs } from "~/utils/env";
 import { authFB, storeFB } from "~/utils/firebase";
 import { PersonnelTransferType } from "./personnelSlice";
 
 export const personnelApi = createApi({
   reducerPath: "personnelApi",
   tagTypes: ["Personnels"],
-  baseQuery: fakeBaseQuery(),
+  baseQuery: fetchBaseQuery({
+    baseUrl: envs.VITE_NODE_SERVER + "/api",
+  }),
   endpoints: (builder) => ({
     getPersonnels: builder.query<PersonnelType[], void>({
-      queryFn: async () => {
-        try {
-          const data: PersonnelType[] = [];
-
-          const querySnapshot = await getDocs(
-            collection(storeFB, "personnels")
-          );
-
-          querySnapshot.forEach((doc) => {
-            data.push({ ...doc.data(), id: doc.id } as PersonnelType);
-          });
-
-          return { data };
-        } catch (error) {
-          return { error: "Lỗi get personnels" };
-        }
-      },
+      query: (arg) => `/personnel?page=${arg}`,
       providesTags: (result) => {
         if (result) {
           return [
@@ -44,16 +31,8 @@ export const personnelApi = createApi({
         } else return [{ type: "Personnels" as const, id: "LIST" }];
       },
     }),
-    getPersonnel: builder.query<PersonnelType | null, string | undefined>({
-      queryFn: async (arg) => {
-        if (!arg) return { data: null };
-        try {
-          const docSnap = await getDoc(doc(storeFB, "personnels", arg));
-          return { data: { ...docSnap.data(), id: arg } as PersonnelType };
-        } catch (error) {
-          return { error: "Lỗi get personnel" };
-        }
-      },
+    getPersonnel: builder.query<PersonnelType | null, string>({
+      query: (arg) => `/personnel/${arg}`,
       providesTags: (result) => {
         if (result) {
           return [{ type: "Personnels" as const, id: result.id }];
@@ -99,14 +78,7 @@ export const personnelApi = createApi({
       ],
     }),
     deletePersonnel: builder.mutation<string, string>({
-      queryFn: async (_) => {
-        try {
-          // await deleteDoc(doc(storeFB, "personnels", arg));
-          return { data: "Xóa thành công" };
-        } catch (error) {
-          return { error: "Lỗi delete personnel" };
-        }
-      },
+      query: (arg) => ({ url: `/personnel/${arg}`, method: "DELETE" }),
       invalidatesTags: (_, __, id) => [{ type: "Personnels", id }],
     }),
   }),

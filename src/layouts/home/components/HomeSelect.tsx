@@ -1,10 +1,10 @@
 import { Select } from "antd";
-import { useGetCompaniesQuery } from "~/redux/company/companyApi";
+import { useGetCompanyAllQuery } from "~/redux/company/companyApi";
 import { userFilterSelect } from "~/redux/personnel/personnelSlice";
 import { useAppDispatch, useAppSelector } from "~/redux/store";
 
 export default function HomeSelect() {
-  const { data = [] } = useGetCompaniesQuery();
+  const { data = [] } = useGetCompanyAllQuery();
 
   const selection = useAppSelector(
     (state) => state.personnelSlice.filter.selection

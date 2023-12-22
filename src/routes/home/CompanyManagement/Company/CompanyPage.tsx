@@ -6,7 +6,7 @@ export default function CompanyPage() {
   return (
     <>
       <CompanyList />
-      <RoleBased includes={["boss"]}>
+      <RoleBased includes={["boss", "admin"]}>
         {({ passed }) => (passed ? <CompanyForm /> : <></>)}
       </RoleBased>
     </>

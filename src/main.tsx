@@ -11,10 +11,12 @@ import { persistor, store } from "~/redux/store";
 import ErrorPage from "~/routes/ErrorPage";
 import LoginPage from "~/routes/LoginPage";
 import CompanyPage from "~/routes/home/CompanyManagement/Company/CompanyPage";
+import DepartmentPage from "~/routes/home/CompanyManagement/Department/DepartmentPage";
 import PersonnelPage from "~/routes/home/CompanyManagement/Personnel/PersonnelPage";
 import HomePage from "~/routes/home/HomePage";
 import PersonnelManagementPage from "~/routes/home/PersonnelManagement/PersonnelManagementPage";
-import SalaryCalculatorPage from "~/routes/home/SalaryCalculator/SalaryCalculatorPage";
+import PersonnelRolePage from "~/routes/home/PersonnelRolePage";
+import SalaryPage from "~/routes/home/Salary/SalaryPage";
 import VacationPage from "~/routes/home/Vacation/VacationPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -32,14 +34,16 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                     path="personnel-management"
                     element={<PersonnelManagementPage />}
                   />
+                  <Route
+                    path="personnel-role"
+                    element={<PersonnelRolePage />}
+                  />
                   <Route path="company-management">
                     <Route path="company" element={<CompanyPage />} />
                     <Route path="personnel" element={<PersonnelPage />} />
+                    <Route path="department" element={<DepartmentPage />} />
                   </Route>
-                  <Route
-                    path="salary-calculator"
-                    element={<SalaryCalculatorPage />}
-                  />
+                  <Route path="salary-calculator" element={<SalaryPage />} />
                   <Route path="vacation" element={<VacationPage />} />
                 </Route>
                 <Route path="/*" element={<ErrorPage />} />

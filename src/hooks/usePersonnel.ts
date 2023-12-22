@@ -12,7 +12,7 @@ export default function usePersonnel() {
     let isSelect = true;
 
     if (userFilter.name) {
-      isName = item.fullname.includes(userFilter.name);
+      isName = item.name.includes(userFilter.name);
     }
 
     if (userFilter.position) {

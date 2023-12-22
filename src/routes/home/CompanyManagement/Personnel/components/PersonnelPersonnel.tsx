@@ -41,7 +41,7 @@ export default function PersonnelPersonnel() {
           render: (text) => <div className="text-center">{text}</div>,
         },
         {
-          title: "Name",
+          title: "Tên NV",
           dataIndex: "name",
         },
         {
@@ -52,7 +52,7 @@ export default function PersonnelPersonnel() {
       dataSource={data.map((item, index) => ({
         key: index,
         id: item.id,
-        name: item.fullname,
+        name: item.name,
         email: item.email,
       }))}
       pagination={{ pageSize: 5 }}

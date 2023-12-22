@@ -1,12 +1,10 @@
 import { PlusOutlined } from "@ant-design/icons";
 import {
   Button,
-  Col,
   FloatButton,
   Form,
   InputNumber,
   Modal,
-  Row,
   Select,
   message,
 } from "antd";
@@ -63,7 +61,12 @@ export default function VacationForm() {
         onCancel={() => setOpen(false)}
         footer={false}
       >
-        <Form form={form} autoComplete="off" onFinish={onFinish}>
+        <Form
+          labelCol={{ span: 6 }}
+          form={form}
+          autoComplete="off"
+          onFinish={onFinish}
+        >
           <Form.Item<VacationType>
             label="Tên NV"
             name="personnelId"
@@ -81,11 +84,18 @@ export default function VacationForm() {
                   .toLowerCase()
                   .localeCompare((optionB?.label ?? "").toLowerCase())
               }
-              options={data.map(({ id, fullname }) => ({
+              options={data.map(({ id, name: fullname }) => ({
                 value: id,
                 label: fullname,
               }))}
             />
+          </Form.Item>
+          <Form.Item<VacationType>
+            label="Ngày xin nghỉ"
+            name="offDays"
+            rules={[{ required: true }]}
+          >
+            <InputNumber min={1} placeholder="Số ngày" />
           </Form.Item>
           <Form.Item<VacationType>
             label="Lý do"
@@ -94,22 +104,11 @@ export default function VacationForm() {
           >
             <TextArea rows={4} placeholder="Lý do xin nghỉ" />
           </Form.Item>
-          <Row gutter={24}>
-            <Col span={16}>
-              <Form.Item<VacationType>
-                label="Số ngày xin nghỉ"
-                name="offDays"
-                rules={[{ required: true }]}
-              >
-                <InputNumber min={1} placeholder="Số ngày" />
-              </Form.Item>
-            </Col>
-            <Col className="text-center" span={8}>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-            </Col>
-          </Row>
+          <div className="text-right">
+            <Button type="primary" htmlType="submit">
+              Xin nghỉ
+            </Button>
+          </div>
         </Form>
       </Modal>
     </>

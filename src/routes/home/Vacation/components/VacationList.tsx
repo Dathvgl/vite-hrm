@@ -50,7 +50,7 @@ export default function VacationList() {
             dataIndex: "personnelId",
             render: (id) => {
               const personnel = personnels?.find((item) => item.id == id);
-              return <>{personnel?.fullname}</>;
+              return <>{personnel?.name}</>;
             },
           },
           {

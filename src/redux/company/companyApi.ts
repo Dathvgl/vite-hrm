@@ -1,87 +1,67 @@
-import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { ListResult } from "~/types/base";
 import {
-  addDoc,
-  arrayRemove,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
-import { CompanyType } from "~/types/company";
-import { storeFB } from "~/utils/firebase";
+  CompaniesGetType,
+  CompanyAllGetType,
+  CompanyPostType,
+} from "~/types/company";
+import { envs } from "~/utils/env";
 
 export const companyApi = createApi({
   reducerPath: "companyApi",
-  tagTypes: ["Companies"],
-  baseQuery: fakeBaseQuery(),
+  tagTypes: ["Companies", "CompanyAll"],
+  baseQuery: fetchBaseQuery({
+    baseUrl: envs.VITE_NODE_SERVER + "/api",
+  }),
   endpoints: (builder) => ({
-    getCompanies: builder.query<CompanyType[], void>({
-      queryFn: async () => {
-        try {
-          const data: CompanyType[] = [];
-
-          const querySnapshot = await getDocs(collection(storeFB, "companies"));
-          querySnapshot.forEach((doc) => {
-            data.push({ ...doc.data(), id: doc.id } as CompanyType);
-          });
-
-          return { data };
-        } catch (error) {
-          return { error: "Lỗi get companies" };
-        }
-      },
+    getCompanies: builder.query<ListResult<CompaniesGetType>, number>({
+      query: (arg) => `/company?page=${arg}`,
       providesTags: (result) => {
         if (result) {
           return [
-            ...result.map(({ id }) => ({ type: "Companies" as const, id })),
-            { type: "Companies" as const, id: "LIST" },
+            ...result.data.map(({ id }) => ({
+              type: "Companies" as const,
+              id,
+            })),
+            { type: "Companies" as const, id: "PARTIAL-LIST" },
           ];
-        } else return [{ type: "Companies" as const, id: "LIST" }];
+        } else return [{ type: "Companies" as const, id: "PARTIAL-LIST" }];
       },
     }),
-    postCompany: builder.mutation<string, CompanyType>({
-      queryFn: async (arg) => {
-        try {
-          await addDoc(collection(storeFB, "companies"), arg);
-          return { data: "Tạo thành công" };
-        } catch (error) {
-          return { error: "Lỗi post company" };
-        }
+    getCompanyAll: builder.query<CompanyAllGetType[], void>({
+      query: () => "/company/all",
+      providesTags: (result) => {
+        if (result) {
+          return [
+            ...result.map(({ id }) => ({
+              type: "CompanyAll" as const,
+              id,
+            })),
+            { type: "CompanyAll" as const, id: "LIST" },
+          ];
+        } else return [{ type: "CompanyAll" as const, id: "LIST" }];
       },
-      invalidatesTags: () => [{ type: "Companies", id: "LIST" }],
+    }),
+    postCompany: builder.mutation<string, CompanyPostType>({
+      query: (arg) => ({ url: "/company", method: "POST", body: arg }),
+      invalidatesTags: () => [
+        { type: "Companies", id: "PARTIAL-LIST" },
+        { type: "CompanyAll", id: "LIST" },
+      ],
     }),
     deleteCompany: builder.mutation<string, string>({
-      queryFn: async (arg) => {
-        try {
-          const querySnapshot = await getDocs(
-            query(
-              collection(storeFB, "personnels"),
-              where("companies", "array-contains", arg)
-            )
-          );
-
-          for (const item of querySnapshot.docs) {
-            await updateDoc(doc(storeFB, "personnels", item.id), {
-              companies: arrayRemove(arg),
-            });
-          }
-
-          await deleteDoc(doc(storeFB, "companies", arg));
-          return { data: "Xóa thành công" };
-        } catch (error) {
-          return { error: "Lỗi delete company" };
-        }
-      },
-      invalidatesTags: (_, __, id) => [{ type: "Companies", id }],
+      query: (arg) => ({ url: `/company/${arg}`, method: "DELETE" }),
+      invalidatesTags: (_, __, id) => [
+        { type: "Companies", id },
+        { type: "CompanyAll", id },
+      ],
     }),
   }),
 });
 
 export const {
   useGetCompaniesQuery,
+  useGetCompanyAllQuery,
   usePostCompanyMutation,
   useDeleteCompanyMutation,
 } = companyApi;

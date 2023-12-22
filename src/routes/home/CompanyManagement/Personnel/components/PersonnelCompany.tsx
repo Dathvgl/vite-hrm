@@ -2,7 +2,7 @@ import { Button, Flex, Table, message } from "antd";
 import { useEffect } from "react";
 import RoleBased from "~/components/RoleBased";
 import usePersonnel from "~/hooks/usePersonnel";
-import { useGetCompaniesQuery } from "~/redux/company/companyApi";
+import { useGetCompanyAllQuery } from "~/redux/company/companyApi";
 import { usePutPersonnelCompaniesMutation } from "~/redux/personnel/personnelApi";
 import { transferPersonnelCompany } from "~/redux/personnel/personnelSlice";
 import { useAppDispatch, useAppSelector } from "~/redux/store";
@@ -17,7 +17,7 @@ export default function PersonnelCompany() {
   const transfer = useAppSelector((state) => state.personnelSlice.transfer);
   const dispatch = useAppDispatch();
 
-  const { data: companies = [] } = useGetCompaniesQuery();
+  const { data: companies = [] } = useGetCompanyAllQuery();
   const { data: personnels } = usePersonnel();
 
   const [putPersonnelCompanies] = usePutPersonnelCompaniesMutation();

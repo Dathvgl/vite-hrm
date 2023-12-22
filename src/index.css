@@ -23,3 +23,12 @@ h6,
 p {
   margin: 0;
 }
+
+.ant-table-content::-webkit-scrollbar {
+  @apply h-[10px];
+}
+
+.ant-table-content::-webkit-scrollbar-thumb {
+  @apply rounded-lg;
+  @apply bg-stone-700 hover:bg-stone-600;
+}

@@ -1,25 +1,28 @@
 import { ReloadOutlined } from "@ant-design/icons";
-import { Button, message } from "antd";
-import Table from "antd/es/table";
-import usePersonnel from "~/hooks/usePersonnel";
-import { useDeletePersonnelMutation } from "~/redux/personnel/personnelApi";
+import { Button, Table, message } from "antd";
+import { useState } from "react";
+import { useDeleteCompanyMutation } from "~/redux/company/companyApi";
+import { useGetDepartmentsQuery } from "~/redux/department/departmentApi";
 import { TableType } from "~/types/base";
-import { PersonnelType } from "~/types/personnel";
+import { DepartmentsGetType } from "~/types/department";
 
-export default function PersonnelList() {
-  const { data = [], refetch } = usePersonnel();
-  const [deletePersonnel] = useDeletePersonnelMutation();
+export default function DepartmentList() {
+  const [page, setPage] = useState<number>(1);
+  const { data, refetch } = useGetDepartmentsQuery(page);
+  const [deleteCompany] = useDeleteCompanyMutation();
   const [messageApi, contextHolder] = message.useMessage();
 
   async function onDelete(id: string) {
     try {
-      await deletePersonnel(id).unwrap();
+      await deleteCompany(id).unwrap();
 
       messageApi.open({
         type: "success",
         content: "Xóa thành công",
       });
     } catch (error) {
+      console.error(error);
+
       messageApi.open({
         type: "error",
         content: "Xóa thất bại",
@@ -30,9 +33,16 @@ export default function PersonnelList() {
   return (
     <>
       {contextHolder}
-      <Table<TableType<PersonnelType>>
+      <Table<TableType<DepartmentsGetType>>
+        bordered
         scroll={{ x: 1200 }}
-        pagination={{ pageSize: 5 }}
+        pagination={{
+          pageSize: 5,
+          total: data?.totalAll,
+          onChange(page, _) {
+            setPage(page);
+          },
+        }}
         columns={[
           {
             key: "key",
@@ -51,13 +61,8 @@ export default function PersonnelList() {
             rowScope: "row",
             render: (text) => <div className="text-center">{text}</div>,
           },
-          { key: "fullname", title: "Họ tên NV", dataIndex: "fullname" },
-          { key: "position", title: "Chức vụ", dataIndex: "position" },
-          { key: "department", title: "Phòng ban", dataIndex: "department" },
-          { key: "phone", title: "Số điện thoại", dataIndex: "phone" },
-          { key: "birth", title: "Ngày sinh", dataIndex: "birth" },
-          { key: "address", title: "Địa chỉ", dataIndex: "address" },
-          { key: "email", title: "Email", dataIndex: "email" },
+          { key: "name", title: "Tên CTy", dataIndex: "name" },
+          { key: "description", title: "Mô tả", dataIndex: "description" },
           {
             key: "actions",
             title: "Thao tác",
@@ -72,10 +77,7 @@ export default function PersonnelList() {
             ),
           },
         ]}
-        dataSource={data.map((item, index) => ({
-          ...item,
-          key: index.toString(),
-        }))}
+        dataSource={data?.data.map((item) => ({ ...item, key: item.stt }))}
       />
     </>
   );

@@ -1,14 +1,16 @@
 import { ReloadOutlined } from "@ant-design/icons";
 import { Button, Table, message } from "antd";
+import { useState } from "react";
 import {
   useDeleteCompanyMutation,
   useGetCompaniesQuery,
 } from "~/redux/company/companyApi";
 import { TableType } from "~/types/base";
-import { CompanyType } from "~/types/company";
+import { CompaniesGetType } from "~/types/company";
 
 export default function CompanyList() {
-  const { data = [], refetch } = useGetCompaniesQuery();
+  const [page, setPage] = useState<number>(1);
+  const { data, refetch } = useGetCompaniesQuery(page);
   const [deleteCompany] = useDeleteCompanyMutation();
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -31,10 +33,16 @@ export default function CompanyList() {
   return (
     <>
       {contextHolder}
-      <Table<TableType<CompanyType>>
+      <Table<TableType<CompaniesGetType>>
         bordered
         scroll={{ x: 1200 }}
-        pagination={{ pageSize: 5 }}
+        pagination={{
+          pageSize: 5,
+          total: data?.totalAll,
+          onChange(page, _) {
+            setPage(page);
+          },
+        }}
         columns={[
           {
             key: "key",
@@ -80,10 +88,7 @@ export default function CompanyList() {
             ),
           },
         ]}
-        dataSource={data.map((item, index) => ({
-          ...item,
-          key: index,
-        }))}
+        dataSource={data?.data.map((item) => ({ ...item, key: item.stt }))}
       />
     </>
   );

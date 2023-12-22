@@ -1,4 +1,5 @@
 type EnvsType = {
+  VITE_NODE_SERVER: string;
   VITE_FIREBASE_API_KEY: string;
   VITE_FIREBASE_AUTH_DOMAIN: string;
   VITE_FIREBASE_PROJECT_ID: string;

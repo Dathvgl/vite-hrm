@@ -54,9 +54,9 @@ export default function PersonnelSearchForm() {
         <Col className="text-right" span={12}>
           <Space size="small">
             <Button type="primary" htmlType="submit">
-              Search
+              Tìm kiếm
             </Button>
-            <Button onClick={onClear}>Clear</Button>
+            <Button onClick={onClear}>Xóa form</Button>
           </Space>
         </Col>
       </Row>

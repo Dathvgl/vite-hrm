@@ -80,9 +80,14 @@ export default function PersonnelFillForm() {
         onCancel={() => setOpen(false)}
         footer={false}
       >
-        <Form form={form} autoComplete="off" onFinish={onFinish}>
+        <Form
+          labelCol={{ span: 10 }}
+          form={form}
+          autoComplete="off"
+          onFinish={onFinish}
+        >
           <Row gutter={24}>
-            <Col span={15}>
+            <Col span={12}>
               <Form.Item<PersonnelType>
                 label="Tên NV"
                 name="fullname"
@@ -91,9 +96,9 @@ export default function PersonnelFillForm() {
                 <Input placeholder="Tên nhân viên" />
               </Form.Item>
             </Col>
-            <Col span={9}>
+            <Col span={12}>
               <Form.Item<PersonnelType>
-                label="SĐT"
+                label="Số ĐT"
                 name="phone"
                 rules={[{ required: true }]}
               >
@@ -122,6 +127,8 @@ export default function PersonnelFillForm() {
             </Col>
           </Row>
           <Form.Item<PersonnelType>
+            className="pl-5"
+            labelCol={{ span: 4 }}
             label="Địa chỉ"
             name="address"
             rules={[{ required: true }]}
@@ -149,7 +156,7 @@ export default function PersonnelFillForm() {
             </Col>
           </Row>
           <Row gutter={24}>
-            <Col span={16}>
+            <Col span={12}>
               <Form.Item<PersonnelType>
                 name="roles"
                 label="Role"
@@ -170,9 +177,9 @@ export default function PersonnelFillForm() {
                 </Select>
               </Form.Item>
             </Col>
-            <Col className="text-center" span={8}>
+            <Col className="text-center" span={12}>
               <Button type="primary" htmlType="submit">
-                Submit
+                Tạo nhân viên
               </Button>
             </Col>
           </Row>

@@ -1,9 +1,11 @@
 import {
   ApartmentOutlined,
+  AuditOutlined,
   CalendarOutlined,
   DesktopOutlined,
   DollarOutlined,
   HomeOutlined,
+  ProjectOutlined,
   TeamOutlined,
   UserSwitchOutlined,
 } from "@ant-design/icons";
@@ -61,6 +63,11 @@ export default function HomeSider({ collapsed }: { collapsed: boolean }) {
                 icon: <UserSwitchOutlined />,
                 label: "Nhân viên",
               },
+              {
+                key: "department",
+                icon: <ProjectOutlined />,
+                label: "Phòng ban",
+              },
             ],
           },
           {
@@ -72,6 +79,11 @@ export default function HomeSider({ collapsed }: { collapsed: boolean }) {
             key: "vacation",
             icon: <CalendarOutlined />,
             label: "Nghỉ phép",
+          },
+          {
+            key: "personnel-role",
+            icon: <AuditOutlined />,
+            label: "Phân quyền",
           },
         ]}
       />
