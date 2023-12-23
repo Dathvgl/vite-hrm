@@ -2,7 +2,6 @@ import { ReloadOutlined } from "@ant-design/icons";
 import { Button, Space, Table, Tag, message } from "antd";
 import { useState } from "react";
 import RoleBased from "~/components/RoleBased";
-import { useGetPersonnelAllQuery } from "~/redux/personnel/personnelApi";
 import {
   useGetVacationsQuery,
   usePutVacationStatusMutation,
@@ -14,9 +13,7 @@ export default function VacationList() {
   const [page, setPage] = useState<number>(1);
   const [messageApi, contextHolder] = message.useMessage();
 
-  const { data: personnels } = useGetPersonnelAllQuery();
-  const { data: vacationFetch, refetch } = useGetVacationsQuery(page);
-
+  const { data, refetch } = useGetVacationsQuery(page);
   const [putVacationStatus] = usePutVacationStatusMutation();
 
   async function onAction(id: string, status: VacationStatusType) {
@@ -40,14 +37,14 @@ export default function VacationList() {
       {contextHolder}
       <Table<TableType<VacationType>>
         pagination={{
-          total: vacationFetch?.totalAll,
+          total: data?.totalAll,
           onChange(page, _) {
             setPage(page);
           },
         }}
         columns={[
           {
-            key: "personnelId",
+            key: "personnel",
             title: (
               <div className="flex justify-center items-center gap-3">
                 <ReloadOutlined
@@ -57,16 +54,19 @@ export default function VacationList() {
                 <span>Tên NV</span>
               </div>
             ),
-            dataIndex: "personnelId",
-            render: (id) => {
-              const personnel = personnels?.find((item) => item.id == id);
-              return <>{personnel?.name}</>;
-            },
+            dataIndex: "personnel",
           },
           {
             key: "offDays",
-            title: "Số ngày xin nghỉ",
+            title: "Ngày xin nghỉ",
             dataIndex: "offDays",
+            render: (list: string[]) => (
+              <>
+                {list.map((item) => (
+                  <Tag key={item}>{item}</Tag>
+                ))}
+              </>
+            ),
           },
           { key: "reason", title: "Lý do", dataIndex: "reason" },
           {
@@ -127,7 +127,7 @@ export default function VacationList() {
             ),
           },
         ]}
-        dataSource={vacationFetch?.data.map((item) => ({
+        dataSource={data?.data.map((item) => ({
           ...item,
           key: item.id,
         }))}
