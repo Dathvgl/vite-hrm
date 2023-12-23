@@ -77,9 +77,9 @@ export default function HomeSider({ collapsed }: { collapsed: boolean }) {
             ],
           },
           {
-            key: "salary-calculator",
+            key: "salary-management",
             icon: <DollarOutlined />,
-            label: "Tính lương",
+            label: "QL tính lương",
           },
           {
             key: "vacation",

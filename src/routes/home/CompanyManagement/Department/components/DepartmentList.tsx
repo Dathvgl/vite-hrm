@@ -21,8 +21,6 @@ export default function DepartmentList() {
         content: "Xóa thành công",
       });
     } catch (error) {
-      console.error(error);
-
       messageApi.open({
         type: "error",
         content: "Xóa thất bại",

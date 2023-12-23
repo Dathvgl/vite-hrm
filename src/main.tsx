@@ -45,7 +45,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                     <Route path="department" element={<DepartmentPage />} />
                     <Route path="position" element={<PositionPage />} />
                   </Route>
-                  <Route path="salary-calculator" element={<SalaryPage />} />
+                  <Route path="salary-management" element={<SalaryPage />} />
                   <Route path="vacation" element={<VacationPage />} />
                 </Route>
                 <Route path="/*" element={<ErrorPage />} />

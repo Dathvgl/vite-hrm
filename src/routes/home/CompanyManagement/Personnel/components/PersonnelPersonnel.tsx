@@ -34,6 +34,7 @@ export default function PersonnelPersonnel() {
   return (
     <Table<TablePersonnelType>
       pagination={{
+        total: data?.totalAll,
         onChange(page, _) {
           setPage(page);
         },

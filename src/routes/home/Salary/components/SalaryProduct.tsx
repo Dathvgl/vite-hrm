@@ -1,7 +1,7 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Col, Form, InputNumber, Row, Space, theme } from "antd";
 import { useState } from "react";
-import { initSalary } from "~/redux/salary/salaryApi";
+import { initSalary } from "~/redux/salary/salarySlice";
 import { useAppDispatch } from "~/redux/store";
 import { vndInput } from "~/utils/inputNumber";
 

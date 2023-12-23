@@ -5,7 +5,7 @@ import { personnelApi } from "./personnel/personnelApi";
 import { personnelSlice } from "./personnel/personnelSlice";
 import { positionApi } from "./position/positionApi";
 import { roleApi } from "./role/roleApi";
-import { salarySlice } from "./salary/salaryApi";
+import { salarySlice } from "./salary/salarySlice";
 import { vacationApi } from "./vacation/vacationApi";
 
 const rootReducer = combineReducers({

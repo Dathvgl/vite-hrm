@@ -1,5 +1,6 @@
 import { ReloadOutlined } from "@ant-design/icons";
 import { Button, Space, Table, Tag, message } from "antd";
+import { useState } from "react";
 import RoleBased from "~/components/RoleBased";
 import { useGetPersonnelAllQuery } from "~/redux/personnel/personnelApi";
 import {
@@ -10,9 +11,12 @@ import { TableType } from "~/types/base";
 import { VacationStatusType, VacationType } from "~/types/vacation";
 
 export default function VacationList() {
+  const [page, setPage] = useState<number>(1);
   const [messageApi, contextHolder] = message.useMessage();
+
   const { data: personnels } = useGetPersonnelAllQuery();
-  const { data: vacations = [], refetch } = useGetVacationsQuery();
+  const { data: vacationFetch, refetch } = useGetVacationsQuery(page);
+
   const [putVacationStatus] = usePutVacationStatusMutation();
 
   async function onAction(id: string, status: VacationStatusType) {
@@ -35,6 +39,12 @@ export default function VacationList() {
     <>
       {contextHolder}
       <Table<TableType<VacationType>>
+        pagination={{
+          total: vacationFetch?.totalAll,
+          onChange(page, _) {
+            setPage(page);
+          },
+        }}
         columns={[
           {
             key: "personnelId",
@@ -117,7 +127,10 @@ export default function VacationList() {
             ),
           },
         ]}
-        dataSource={vacations.map((item) => ({ ...item, key: item.id }))}
+        dataSource={vacationFetch?.data.map((item) => ({
+          ...item,
+          key: item.id,
+        }))}
       />
     </>
   );

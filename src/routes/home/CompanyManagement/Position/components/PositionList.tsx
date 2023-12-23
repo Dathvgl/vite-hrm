@@ -36,7 +36,6 @@ export default function PositionList() {
       <Table<TableType<PositionsGetType>>
         bordered
         pagination={{
-          pageSize: 5,
           total: data?.totalAll,
           onChange(page, _) {
             setPage(page);

@@ -1,20 +1,11 @@
 import { PlusOutlined } from "@ant-design/icons";
-import {
-  Button,
-  DatePicker,
-  FloatButton,
-  Form,
-  Modal,
-  Select,
-  message,
-} from "antd";
+import { Button, FloatButton, Form, Modal, Select, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useState } from "react";
+import MultipleDatePicker from "~/components/MultiDatePicker";
 import { useGetPersonnelAllQuery } from "~/redux/personnel/personnelApi";
 import { usePostVacationMutation } from "~/redux/vacation/vacationApi";
-import { VacationType } from "~/types/vacation";
-
-const formatDayjs = "DD/MM/YYYY";
+import { VacationPostType } from "~/types/vacation";
 
 export default function VacationForm() {
   const { data = [] } = useGetPersonnelAllQuery();
@@ -29,9 +20,9 @@ export default function VacationForm() {
     form.resetFields();
   }
 
-  async function onFinish(values: VacationType) {
+  async function onFinish(values: VacationPostType) {
     try {
-      await postVacation({ ...values, status: "pending" }).unwrap();
+      await postVacation({ ...values }).unwrap();
 
       messageApi.open({
         type: "success",
@@ -69,9 +60,9 @@ export default function VacationForm() {
           autoComplete="off"
           onFinish={onFinish}
         >
-          <Form.Item<VacationType>
+          <Form.Item<VacationPostType>
             label="Tên NV"
-            name="personnelId"
+            name="personnel"
             rules={[{ required: true }]}
           >
             <Select
@@ -92,14 +83,18 @@ export default function VacationForm() {
               }))}
             />
           </Form.Item>
-          <Form.Item<VacationType>
+          <Form.Item<VacationPostType>
             label="Ngày xin nghỉ"
             name="offDays"
             rules={[{ required: true }]}
           >
-            <DatePicker format={formatDayjs} />
+            <MultipleDatePicker
+              onChange={(value) => {
+                form.setFieldsValue({ offDays: value });
+              }}
+            />
           </Form.Item>
-          <Form.Item<VacationType>
+          <Form.Item<VacationPostType>
             label="Lý do"
             name="reason"
             rules={[{ required: true }]}

@@ -1,81 +1,50 @@
-import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { ListResult } from "~/types/base";
 import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
-import { VacationType } from "~/types/vacation";
-import { storeFB } from "~/utils/firebase";
+  VacationPostType,
+  VacationType,
+  VacationsGetType,
+} from "~/types/vacation";
+import { envs } from "~/utils/env";
 
 export const vacationApi = createApi({
   reducerPath: "vacationApi",
   tagTypes: ["Vacations"],
-  baseQuery: fakeBaseQuery(),
+  baseQuery: fetchBaseQuery({
+    baseUrl: envs.VITE_NODE_SERVER + "/api",
+  }),
   endpoints: (builder) => ({
-    getVacations: builder.query<VacationType[], void>({
-      queryFn: async () => {
-        try {
-          const data: VacationType[] = [];
-
-          const querySnapshot = await getDocs(collection(storeFB, "vacations"));
-          querySnapshot.forEach((doc) => {
-            data.push({ ...doc.data(), id: doc.id } as VacationType);
-          });
-
-          return { data };
-        } catch (error) {
-          return { error: "Lỗi get vacations" };
-        }
-      },
+    getVacations: builder.query<ListResult<VacationsGetType>, number>({
+      query: (arg) => `/vacation?page=${arg}`,
       providesTags: (result) => {
         if (result) {
           return [
-            ...result.map(({ id }) => ({ type: "Vacations" as const, id })),
+            ...result.data.map(({ id }) => ({
+              type: "Vacations" as const,
+              id,
+            })),
             { type: "Vacations" as const, id: "LIST" },
           ];
         } else return [{ type: "Vacations" as const, id: "LIST" }];
       },
     }),
-    postVacation: builder.mutation<string, VacationType>({
-      queryFn: async (arg) => {
-        try {
-          await addDoc(collection(storeFB, "vacations"), arg);
-          return { data: "Tạo thành công" };
-        } catch (error) {
-          return { error: "Lỗi post vacation" };
-        }
-      },
+    postVacation: builder.mutation<string, VacationPostType>({
+      query: (arg) => ({ url: "/vacation", method: "POST", body: arg }),
       invalidatesTags: () => [{ type: "Vacations", id: "LIST" }],
     }),
     putVacationStatus: builder.mutation<
       string,
       Pick<VacationType, "id" | "status">
     >({
-      queryFn: async (arg) => {
-        try {
-          await updateDoc(doc(storeFB, "vacations", arg.id), {
-            status: arg.status,
-          });
-
-          return { data: "Cập nhật thành công" };
-        } catch (error) {
-          return { error: "Lỗi put vacation" };
-        }
-      },
+      query: (arg) => ({
+        url: `/vacation/status/${arg.id}`,
+        method: "PUT",
+        body: { status: arg.status },
+      }),
       invalidatesTags: (_, __, arg) => [{ type: "Vacations", id: arg.id }],
     }),
     deleteVacation: builder.mutation<string, string>({
-      queryFn: async (arg) => {
-        try {
-          await deleteDoc(doc(storeFB, "vacations", arg));
-          return { data: "Xóa thành công" };
-        } catch (error) {
-          return { error: "Lỗi delete vacation" };
-        }
-      },
+      query: (arg) => ({ url: `/vacation/${arg}`, method: "DELETE" }),
       invalidatesTags: (_, __, id) => [{ type: "Vacations", id }],
     }),
   }),
