@@ -22,12 +22,14 @@ export type PersonnelsGetManagement = {
 export type PersonnelsGetCompany = {
   createdAt: number;
   updatedAt: number;
-} & Pick<PersonnelType, "id" | "stt" | "name" | "company">;
+} & Pick<PersonnelType, "id" | "stt" | "name" | "email" | "company">;
 
 export type PersonnelsGetRoles = {
   createdAt: number;
   updatedAt: number;
 } & Pick<PersonnelType, "id" | "stt" | "name" | "roles">;
+
+export type PersonnelAllGetType = Pick<PersonnelType, "id" | "stt" | "name">;
 
 export type PersonnelRoleType = "staff" | "manager" | "admin" | "boss";
 

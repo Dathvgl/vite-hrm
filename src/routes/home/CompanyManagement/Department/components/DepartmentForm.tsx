@@ -58,7 +58,7 @@ export default function DepartmentForm() {
           onFinish={onFinish}
         >
           <Form.Item<DepartmentPostType>
-            label="Tên phỏng ban"
+            label="Tên phòng ban"
             name="name"
             rules={[{ required: true }]}
           >
@@ -73,7 +73,7 @@ export default function DepartmentForm() {
           </Form.Item>
           <div className="text-right">
             <Button type="primary" htmlType="submit">
-              Tạo phỏng ban
+              Tạo phòng ban
             </Button>
           </div>
         </Form>

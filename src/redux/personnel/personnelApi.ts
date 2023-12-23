@@ -1,32 +1,74 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { ListResult } from "~/types/base";
 import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
-import { PersonnelType } from "~/types/personnel";
+  PersonnelAllGetType,
+  PersonnelPostType,
+  PersonnelType,
+  PersonnelsGetCompany,
+  PersonnelsGetManagement,
+  PersonnelsGetRoles,
+} from "~/types/personnel";
 import { envs } from "~/utils/env";
-import { authFB, storeFB } from "~/utils/firebase";
 import { PersonnelTransferType } from "./personnelSlice";
+
+export type PersonnelQueryType = {
+  page: number;
+  type: "management" | "company" | "role" | "all";
+  limit?: number;
+  company?: string;
+  name?: string;
+  phone?: string;
+  position?: string;
+};
 
 export const personnelApi = createApi({
   reducerPath: "personnelApi",
-  tagTypes: ["Personnels"],
+  tagTypes: ["Personnels", "PersonnelAll"],
   baseQuery: fetchBaseQuery({
     baseUrl: envs.VITE_NODE_SERVER + "/api",
   }),
   endpoints: (builder) => ({
-    getPersonnels: builder.query<PersonnelType[], void>({
-      query: (arg) => `/personnel?page=${arg}`,
+    getPersonnels: builder.query<
+      ListResult<
+        PersonnelsGetManagement | PersonnelsGetCompany | PersonnelsGetRoles
+      >,
+      PersonnelQueryType
+    >({
+      query: (arg) => {
+        const search: string[] = [];
+
+        Object.keys(arg).forEach((key) => {
+          const item = arg[key as keyof typeof arg];
+
+          if (item && item != "") {
+            search.push(`${key}=${item}`);
+          }
+        });
+
+        return { url: `/personnel?${search.join("&")}` };
+      },
       providesTags: (result) => {
         if (result) {
           return [
-            ...result.map(({ id }) => ({ type: "Personnels" as const, id })),
-            { type: "Personnels" as const, id: "LIST" },
+            ...result.data.map(({ id }) => ({
+              type: "Personnels" as const,
+              id,
+            })),
+            { type: "Personnels" as const, id: "PARTIAL-LIST" },
+          ];
+        } else return [{ type: "Personnels" as const, id: "PARTIAL-LIST" }];
+      },
+    }),
+    getPersonnelAll: builder.query<PersonnelAllGetType[], void>({
+      query: () => "/personnel/all",
+      providesTags: (result) => {
+        if (result) {
+          return [
+            ...result.map(({ id }) => ({
+              type: "PersonnelAll" as const,
+              id,
+            })),
+            { type: "PersonnelAll" as const, id: "LIST" },
           ];
         } else return [{ type: "Personnels" as const, id: "LIST" }];
       },
@@ -39,44 +81,33 @@ export const personnelApi = createApi({
         } else return [{ type: "Personnels" as const, id: "LIST" }];
       },
     }),
-    postPersonnel: builder.mutation<string, PersonnelType>({
-      queryFn: async (arg) => {
-        try {
-          const userCredential = await createUserWithEmailAndPassword(
-            authFB,
-            arg.email,
-            "123456"
-          );
-
-          await setDoc(
-            doc(storeFB, "personnels", userCredential.user.uid),
-            arg,
-            { merge: true }
-          );
-          return { data: "Tạo thành công" };
-        } catch (error) {
-          return { error: "Lỗi post personnel" };
-        }
-      },
-      invalidatesTags: () => [{ type: "Personnels", id: "LIST" }],
+    postPersonnel: builder.mutation<string, PersonnelPostType>({
+      query: (arg) => ({ url: "/personnel", method: "POST", body: arg }),
+      invalidatesTags: () => [
+        { type: "Personnels", id: "PARTIAL-LIST" },
+        { type: "PersonnelAll", id: "LIST" },
+      ],
     }),
-    putPersonnelCompanies: builder.mutation<string, PersonnelTransferType>({
-      queryFn: async (arg) => {
-        if (!arg.personnel) return { error: "Lỗi put personnel" };
-        try {
-          await updateDoc(doc(storeFB, "personnels", arg.personnel), {
-            companies: arg.companies,
-          });
-
-          return { data: "Cập nhật thành công" };
-        } catch (error) {
-          return { error: "Lỗi put personnel" };
-        }
-      },
+    putPersonnelCompany: builder.mutation<string, PersonnelTransferType>({
+      query: (arg) => ({
+        url: `/personnel/company/${arg.personnel}`,
+        method: "PUT",
+        body: { company: arg.company },
+      }),
       invalidatesTags: (_, __, arg) => [
         { type: "Personnels", id: arg.personnel },
       ],
     }),
+    putPersonnelRole: builder.mutation<string, { id: string; roles: string[] }>(
+      {
+        query: (arg) => ({
+          url: `/personnel/role/${arg.id}`,
+          method: "PUT",
+          body: { roles: arg.roles },
+        }),
+        invalidatesTags: (_, __, arg) => [{ type: "Personnels", id: arg.id }],
+      }
+    ),
     deletePersonnel: builder.mutation<string, string>({
       query: (arg) => ({ url: `/personnel/${arg}`, method: "DELETE" }),
       invalidatesTags: (_, __, id) => [{ type: "Personnels", id }],
@@ -87,7 +118,9 @@ export const personnelApi = createApi({
 export const {
   useGetPersonnelsQuery,
   useGetPersonnelQuery,
+  useGetPersonnelAllQuery,
   usePostPersonnelMutation,
-  usePutPersonnelCompaniesMutation,
+  usePutPersonnelCompanyMutation,
+  usePutPersonnelRoleMutation,
   useDeletePersonnelMutation,
 } = personnelApi;

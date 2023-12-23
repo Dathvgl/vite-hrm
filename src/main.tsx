@@ -13,6 +13,7 @@ import LoginPage from "~/routes/LoginPage";
 import CompanyPage from "~/routes/home/CompanyManagement/Company/CompanyPage";
 import DepartmentPage from "~/routes/home/CompanyManagement/Department/DepartmentPage";
 import PersonnelPage from "~/routes/home/CompanyManagement/Personnel/PersonnelPage";
+import PositionPage from "~/routes/home/CompanyManagement/Position/PositionPage";
 import HomePage from "~/routes/home/HomePage";
 import PersonnelManagementPage from "~/routes/home/PersonnelManagement/PersonnelManagementPage";
 import PersonnelRolePage from "~/routes/home/PersonnelRolePage";
@@ -42,6 +43,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                     <Route path="company" element={<CompanyPage />} />
                     <Route path="personnel" element={<PersonnelPage />} />
                     <Route path="department" element={<DepartmentPage />} />
+                    <Route path="position" element={<PositionPage />} />
                   </Route>
                   <Route path="salary-calculator" element={<SalaryPage />} />
                   <Route path="vacation" element={<VacationPage />} />

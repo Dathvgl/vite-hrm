@@ -1,13 +1,26 @@
 import { ReloadOutlined } from "@ant-design/icons";
-import { Button, message } from "antd";
-import Table from "antd/es/table";
-import usePersonnel from "~/hooks/usePersonnel";
-import { useDeletePersonnelMutation } from "~/redux/personnel/personnelApi";
-import { TableType } from "~/types/base";
-import { PersonnelType } from "~/types/personnel";
+import { Button, message, Table } from "antd";
+import { useState } from "react";
+import {
+  useDeletePersonnelMutation,
+  useGetPersonnelsQuery,
+} from "~/redux/personnel/personnelApi";
+import { useAppSelector } from "~/redux/store";
+import { ListResult, TableType } from "~/types/base";
+import { PersonnelsGetManagement } from "~/types/personnel";
 
 export default function PersonnelList() {
-  const { data = [], refetch } = usePersonnel();
+  const [page, setPage] = useState<number>(1);
+  const userFilter = useAppSelector((state) => state.personnelSlice.filter);
+
+  const { data: dataQuery, refetch } = useGetPersonnelsQuery({
+    page,
+    type: "management",
+    ...userFilter,
+  });
+
+  const data = dataQuery as ListResult<PersonnelsGetManagement> | undefined;
+
   const [deletePersonnel] = useDeletePersonnelMutation();
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -30,9 +43,14 @@ export default function PersonnelList() {
   return (
     <>
       {contextHolder}
-      <Table<TableType<PersonnelType>>
+      <Table<TableType<PersonnelsGetManagement>>
         scroll={{ x: 1200 }}
-        pagination={{ pageSize: 5 }}
+        pagination={{
+          total: data?.totalAll,
+          onChange(page, _) {
+            setPage(page);
+          },
+        }}
         columns={[
           {
             key: "key",
@@ -51,7 +69,7 @@ export default function PersonnelList() {
             rowScope: "row",
             render: (text) => <div className="text-center">{text}</div>,
           },
-          { key: "fullname", title: "Họ tên NV", dataIndex: "fullname" },
+          { key: "name", title: "Họ tên NV", dataIndex: "name" },
           { key: "position", title: "Chức vụ", dataIndex: "position" },
           { key: "department", title: "Phòng ban", dataIndex: "department" },
           { key: "phone", title: "Số điện thoại", dataIndex: "phone" },
@@ -72,9 +90,9 @@ export default function PersonnelList() {
             ),
           },
         ]}
-        dataSource={data.map((item, index) => ({
+        dataSource={data?.data.map((item) => ({
           ...item,
-          key: index.toString(),
+          key: item.stt,
         }))}
       />
     </>

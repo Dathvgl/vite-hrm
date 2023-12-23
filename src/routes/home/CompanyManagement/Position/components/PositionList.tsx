@@ -1,16 +1,14 @@
 import { ReloadOutlined } from "@ant-design/icons";
 import { Button, Table, message } from "antd";
 import { useState } from "react";
-import {
-  useDeleteCompanyMutation,
-  useGetCompaniesQuery,
-} from "~/redux/company/companyApi";
+import { useDeleteCompanyMutation } from "~/redux/company/companyApi";
+import { useGetPositionsQuery } from "~/redux/position/positionApi";
 import { TableType } from "~/types/base";
-import { CompaniesGetType } from "~/types/company";
+import { PositionsGetType } from "~/types/position";
 
-export default function CompanyList() {
+export default function PositionList() {
   const [page, setPage] = useState<number>(1);
-  const { data, refetch } = useGetCompaniesQuery(page);
+  const { data, refetch } = useGetPositionsQuery(page);
   const [deleteCompany] = useDeleteCompanyMutation();
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -23,6 +21,8 @@ export default function CompanyList() {
         content: "Xóa thành công",
       });
     } catch (error) {
+      console.error(error);
+
       messageApi.open({
         type: "error",
         content: "Xóa thất bại",
@@ -33,10 +33,10 @@ export default function CompanyList() {
   return (
     <>
       {contextHolder}
-      <Table<TableType<CompaniesGetType>>
+      <Table<TableType<PositionsGetType>>
         bordered
-        scroll={{ x: 1200 }}
         pagination={{
+          pageSize: 5,
           total: data?.totalAll,
           onChange(page, _) {
             setPage(page);
@@ -60,18 +60,19 @@ export default function CompanyList() {
             rowScope: "row",
             render: (text) => <div className="text-center">{text}</div>,
           },
-          { key: "code", title: "Mã CTy", dataIndex: "code" },
-          { key: "name", title: "Tên CTy", dataIndex: "name" },
-          { key: "address", title: "Địa chỉ", dataIndex: "address" },
+          { key: "name", title: "Tên chức vụ", dataIndex: "name" },
+          { key: "department", title: "Phòng ban", dataIndex: "department" },
           {
-            key: "constructionYear",
-            title: "Năm xây dựng",
-            dataIndex: "constructionYear",
-          },
-          {
-            key: "operationYear",
-            title: "Năm vận hành",
-            dataIndex: "operationYear",
+            key: "salary",
+            title: "Lương cơ bản",
+            dataIndex: "salary",
+            render: (text) => (
+              <>
+                {`${Number.parseInt(`${text}`)
+                  .toLocaleString()
+                  .replaceAll(",", ".")} VND`}
+              </>
+            ),
           },
           {
             key: "actions",

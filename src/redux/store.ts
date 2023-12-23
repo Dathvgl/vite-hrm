@@ -12,6 +12,8 @@ import { companyApi } from "./company/companyApi";
 import { departmentApi } from "./department/departmentApi";
 import { personnelApi } from "./personnel/personnelApi";
 import { personnelSlice } from "./personnel/personnelSlice";
+import { positionApi } from "./position/positionApi";
+import { roleApi } from "./role/roleApi";
 import rootReducer, { RootReducer } from "./root";
 import { salarySlice } from "./salary/salaryApi";
 import { vacationApi } from "./vacation/vacationApi";
@@ -39,7 +41,9 @@ export const store = configureStore({
       .concat(companyApi.middleware)
       .concat(personnelApi.middleware)
       .concat(vacationApi.middleware)
-      .concat(departmentApi.middleware),
+      .concat(departmentApi.middleware)
+      .concat(positionApi.middleware)
+      .concat(roleApi.middleware),
 });
 
 export const persistor = persistStore(store);

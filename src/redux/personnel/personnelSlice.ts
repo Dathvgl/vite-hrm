@@ -14,7 +14,8 @@ export type PersonnelFilterSearch = Omit<PersonnelFilter, "selection">;
 
 export type PersonnelTransferType = {
   personnel?: string;
-  companies: string[];
+  company: string | null;
+  companyCurrent: string | null;
 };
 
 type PersonnelState = {
@@ -26,7 +27,7 @@ type PersonnelState = {
 const initialState: PersonnelState = {
   user: null,
   filter: { selection: "all" },
-  transfer: { companies: [] },
+  transfer: { company: null, companyCurrent: null },
 };
 
 export const personnelSlice = createSlice({
@@ -42,11 +43,17 @@ export const personnelSlice = createSlice({
     userFilterSearch: (state, action: PayloadAction<PersonnelFilterSearch>) => {
       state.filter = { ...action.payload, selection: state.filter.selection };
     },
-    transferPersonnelPersonnel: (state, action: PayloadAction<string>) => {
+    transferPersonnelPersonnel: (
+      state,
+      action: PayloadAction<string | undefined>
+    ) => {
       state.transfer.personnel = action.payload;
     },
-    transferPersonnelCompany: (state, action: PayloadAction<string[]>) => {
-      state.transfer.companies = action.payload;
+    transferPersonnelCompany: (state, action: PayloadAction<string>) => {
+      state.transfer.company = action.payload;
+    },
+    transferPersonnelCompanyCurrent: (state, action: PayloadAction<string>) => {
+      state.transfer.companyCurrent = action.payload;
     },
   },
 });
@@ -57,4 +64,5 @@ export const {
   userFilterSearch,
   transferPersonnelPersonnel,
   transferPersonnelCompany,
+  transferPersonnelCompanyCurrent,
 } = personnelSlice.actions;

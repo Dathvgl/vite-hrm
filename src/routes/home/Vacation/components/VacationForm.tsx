@@ -1,21 +1,23 @@
 import { PlusOutlined } from "@ant-design/icons";
 import {
   Button,
+  DatePicker,
   FloatButton,
   Form,
-  InputNumber,
   Modal,
   Select,
   message,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useState } from "react";
-import usePersonnel from "~/hooks/usePersonnel";
+import { useGetPersonnelAllQuery } from "~/redux/personnel/personnelApi";
 import { usePostVacationMutation } from "~/redux/vacation/vacationApi";
 import { VacationType } from "~/types/vacation";
 
+const formatDayjs = "DD/MM/YYYY";
+
 export default function VacationForm() {
-  const { data = [] } = usePersonnel();
+  const { data = [] } = useGetPersonnelAllQuery();
   const [postVacation] = usePostVacationMutation();
 
   const [open, setOpen] = useState(false);
@@ -95,7 +97,7 @@ export default function VacationForm() {
             name="offDays"
             rules={[{ required: true }]}
           >
-            <InputNumber min={1} placeholder="Số ngày" />
+            <DatePicker format={formatDayjs} />
           </Form.Item>
           <Form.Item<VacationType>
             label="Lý do"

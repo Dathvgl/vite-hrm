@@ -1,7 +1,7 @@
 import { ReloadOutlined } from "@ant-design/icons";
 import { Button, Space, Table, Tag, message } from "antd";
 import RoleBased from "~/components/RoleBased";
-import usePersonnel from "~/hooks/usePersonnel";
+import { useGetPersonnelAllQuery } from "~/redux/personnel/personnelApi";
 import {
   useGetVacationsQuery,
   usePutVacationStatusMutation,
@@ -11,7 +11,7 @@ import { VacationStatusType, VacationType } from "~/types/vacation";
 
 export default function VacationList() {
   const [messageApi, contextHolder] = message.useMessage();
-  const { data: personnels } = usePersonnel();
+  const { data: personnels } = useGetPersonnelAllQuery();
   const { data: vacations = [], refetch } = useGetVacationsQuery();
   const [putVacationStatus] = usePutVacationStatusMutation();
 

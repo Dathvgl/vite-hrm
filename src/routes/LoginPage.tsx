@@ -37,6 +37,7 @@ export default function LoginPage() {
         <Card title={<h1 className="text-center">Quản lý nhân sự</h1>}>
           <Form
             className="[&_.ant-form-item]:mb-0"
+            labelCol={{ span: 8 }}
             autoComplete="off"
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}

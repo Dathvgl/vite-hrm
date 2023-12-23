@@ -35,9 +35,7 @@ export default function DepartmentList() {
       {contextHolder}
       <Table<TableType<DepartmentsGetType>>
         bordered
-        scroll={{ x: 1200 }}
         pagination={{
-          pageSize: 5,
           total: data?.totalAll,
           onChange(page, _) {
             setPage(page);
@@ -61,7 +59,7 @@ export default function DepartmentList() {
             rowScope: "row",
             render: (text) => <div className="text-center">{text}</div>,
           },
-          { key: "name", title: "Tên CTy", dataIndex: "name" },
+          { key: "name", title: "Tên phòng ban", dataIndex: "name" },
           { key: "description", title: "Mô tả", dataIndex: "description" },
           {
             key: "actions",

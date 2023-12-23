@@ -1,10 +1,13 @@
 import { Button, Flex, Table, message } from "antd";
 import { useEffect } from "react";
 import RoleBased from "~/components/RoleBased";
-import usePersonnel from "~/hooks/usePersonnel";
 import { useGetCompanyAllQuery } from "~/redux/company/companyApi";
-import { usePutPersonnelCompaniesMutation } from "~/redux/personnel/personnelApi";
-import { transferPersonnelCompany } from "~/redux/personnel/personnelSlice";
+import { usePutPersonnelCompanyMutation } from "~/redux/personnel/personnelApi";
+import {
+  transferPersonnelCompany,
+  transferPersonnelCompanyCurrent,
+  transferPersonnelPersonnel,
+} from "~/redux/personnel/personnelSlice";
 import { useAppDispatch, useAppSelector } from "~/redux/store";
 import { TableType } from "~/types/base";
 
@@ -18,27 +21,28 @@ export default function PersonnelCompany() {
   const dispatch = useAppDispatch();
 
   const { data: companies = [] } = useGetCompanyAllQuery();
-  const { data: personnels } = usePersonnel();
 
-  const [putPersonnelCompanies] = usePutPersonnelCompaniesMutation();
+  const [putPersonnelCompany] = usePutPersonnelCompanyMutation();
   const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
-    const personnel = personnels.find((item) => item.id == transfer.personnel);
-
-    if (personnel && personnel.companies.length != 0) {
-      dispatch(transferPersonnelCompany(personnel.companies));
-    }
-  }, [transfer.personnel]);
+    return () => {
+      dispatch(transferPersonnelPersonnel());
+    };
+  }, []);
 
   async function onUpdate() {
     try {
-      await putPersonnelCompanies(transfer).unwrap();
+      await putPersonnelCompany(transfer).unwrap();
 
       messageApi.open({
         type: "success",
         content: "Cập nhật thành công",
       });
+
+      if (transfer.company) {
+        dispatch(transferPersonnelCompanyCurrent(transfer.company));
+      }
     } catch (error) {
       messageApi.open({
         type: "error",
@@ -48,8 +52,6 @@ export default function PersonnelCompany() {
   }
 
   if (!transfer.personnel) return <></>;
-  const personnel = personnels.find((item) => item.id == transfer.personnel);
-  if (!personnel) return <></>;
 
   return (
     <RoleBased includes={["boss", "admin"]}>
@@ -57,13 +59,14 @@ export default function PersonnelCompany() {
         <Flex vertical gap={12}>
           {contextHolder}
           <Table<TableCompanyType>
+            pagination={false}
             rowSelection={{
-              type: "checkbox",
-              selectedRowKeys: transfer.companies,
+              type: "radio",
+              selectedRowKeys: transfer.company
+                ? [transfer.company]
+                : undefined,
               onChange: (_: React.Key[], selectedRows: TableCompanyType[]) => {
-                dispatch(
-                  transferPersonnelCompany(selectedRows.map(({ id }) => id))
-                );
+                dispatch(transferPersonnelCompany(selectedRows[0].id));
               },
               getCheckboxProps: (_) => ({ disabled: !passed }),
             }}
@@ -74,7 +77,7 @@ export default function PersonnelCompany() {
                 render: (text, record) => (
                   <span
                     className={
-                      personnel.companies?.includes(record.id)
+                      transfer.companyCurrent == record.id
                         ? "font-bold text-green-500"
                         : undefined
                     }
@@ -89,7 +92,6 @@ export default function PersonnelCompany() {
               id: item.id,
               name: item.name,
             }))}
-            pagination={false}
           />
           {passed && (
             <div className="text-right">

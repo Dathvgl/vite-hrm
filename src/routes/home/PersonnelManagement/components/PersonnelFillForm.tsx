@@ -11,29 +11,42 @@ import {
   Select,
   message,
 } from "antd";
+import { RangePickerProps } from "antd/es/date-picker";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useState } from "react";
+import { useGetDepartmentAllQuery } from "~/redux/department/departmentApi";
 import { usePostPersonnelMutation } from "~/redux/personnel/personnelApi";
-import { PersonnelRoleType, PersonnelType } from "~/types/personnel";
+import { useGetPositionAllQuery } from "~/redux/position/positionApi";
+import { PersonnelPostType } from "~/types/personnel";
 
-type FieldType = Omit<PersonnelType, "birth"> & {
+dayjs.extend(customParseFormat);
+
+type FieldType = Omit<PersonnelPostType, "birth"> & {
   birth: dayjs.Dayjs;
 };
 
 const formatDayjs = "DD/MM/YYYY";
-const roles: { name: string; role: PersonnelRoleType }[] = [
-  {
-    name: "Nhân viên",
-    role: "staff",
-  },
-  { name: "Quản lý", role: "manager" },
-];
+
+const disabledDate: RangePickerProps["disabledDate"] = (current) => {
+  return current && current < dayjs().endOf("day");
+};
 
 export default function PersonnelFillForm() {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
-  const [postPersonnel] = usePostPersonnelMutation();
   const [messageApi, contextHolder] = message.useMessage();
+
+  const { data: departments = [], isSuccess: isDepartment } =
+    useGetDepartmentAllQuery();
+
+  const department: string | undefined = Form.useWatch("department", form);
+
+  const { data: positions = [] } = useGetPositionAllQuery(department, {
+    skip: department == undefined,
+  });
+
+  const [postPersonnel] = usePostPersonnelMutation();
 
   function handleOk() {
     setOpen(false);
@@ -41,10 +54,9 @@ export default function PersonnelFillForm() {
   }
 
   async function onFinish(values: FieldType) {
-    const data: PersonnelType = {
+    const data: PersonnelPostType = {
       ...values,
       birth: values.birth.format(formatDayjs),
-      companies: [],
     };
 
     try {
@@ -88,45 +100,58 @@ export default function PersonnelFillForm() {
         >
           <Row gutter={24}>
             <Col span={12}>
-              <Form.Item<PersonnelType>
+              <Form.Item<PersonnelPostType>
                 label="Tên NV"
-                name="fullname"
+                name="name"
                 rules={[{ required: true }]}
               >
                 <Input placeholder="Tên nhân viên" />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item<PersonnelType>
+              <Form.Item<PersonnelPostType>
                 label="Số ĐT"
                 name="phone"
-                rules={[{ required: true }]}
+                rules={[
+                  { required: true, len: 10 },
+                  { pattern: new RegExp(/^0/g), message: "SĐT bắt đầu từ 0" },
+                ]}
               >
                 <Input placeholder="Số điện thoại" />
               </Form.Item>
             </Col>
           </Row>
-          <Row gutter={24}>
-            <Col span={12}>
-              <Form.Item<PersonnelType>
-                label="Chức vụ"
-                name="position"
-                rules={[{ required: true }]}
-              >
-                <Input placeholder="Chức vụ" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item<PersonnelType>
-                label="Phòng ban"
-                name="department"
-                rules={[{ required: true }]}
-              >
-                <Input placeholder="Phòng ban" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Form.Item<PersonnelType>
+          <Form.Item<PersonnelPostType>
+            className="pl-5"
+            labelCol={{ span: 4 }}
+            label="Ph. ban"
+            name="department"
+            rules={[{ required: true }]}
+          >
+            <Select disabled={!isDepartment} placeholder="Phòng ban">
+              {departments.map((item) => (
+                <Select.Option key={item.id} value={item.id}>
+                  {item.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item<PersonnelPostType>
+            className="pl-5"
+            labelCol={{ span: 4 }}
+            label="Chức vụ"
+            name="position"
+            rules={[{ required: true }]}
+          >
+            <Select disabled={positions.length == 0} placeholder="Chức vụ">
+              {positions?.map((item) => (
+                <Select.Option key={item.id} value={item.id}>
+                  {item.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item<PersonnelPostType>
             className="pl-5"
             labelCol={{ span: 4 }}
             label="Địa chỉ"
@@ -137,7 +162,7 @@ export default function PersonnelFillForm() {
           </Form.Item>
           <Row gutter={24}>
             <Col span={12}>
-              <Form.Item<PersonnelType>
+              <Form.Item<PersonnelPostType>
                 label="Email"
                 name="email"
                 rules={[{ required: true }]}
@@ -146,43 +171,20 @@ export default function PersonnelFillForm() {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item<PersonnelType>
+              <Form.Item<PersonnelPostType>
                 label="Năm sinh"
                 name="birth"
                 rules={[{ required: true }]}
               >
-                <DatePicker format={formatDayjs} />
+                <DatePicker format={formatDayjs} disabledDate={disabledDate} />
               </Form.Item>
             </Col>
           </Row>
-          <Row gutter={24}>
-            <Col span={12}>
-              <Form.Item<PersonnelType>
-                name="roles"
-                label="Role"
-                rules={[
-                  {
-                    required: true,
-                    type: "array",
-                    message: "Hãy phân quyền cho người này",
-                  },
-                ]}
-              >
-                <Select mode="multiple" placeholder="Phân quyền">
-                  {roles.map((item) => (
-                    <Select.Option key={item.role} value={item.role}>
-                      {item.name}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col className="text-center" span={12}>
-              <Button type="primary" htmlType="submit">
-                Tạo nhân viên
-              </Button>
-            </Col>
-          </Row>
+          <div className="text-right">
+            <Button type="primary" htmlType="submit">
+              Tạo nhân viên
+            </Button>
+          </div>
         </Form>
       </Modal>
     </>
