@@ -3,7 +3,8 @@ export type PositionType = {
   stt: number;
   department: string;
   name: string;
-  salary: string;
+  salary: number;
+  allowance?: number;
 };
 
 export type PositionsGetType = {

@@ -14,10 +14,12 @@ import CompanyPage from "~/routes/home/CompanyManagement/Company/CompanyPage";
 import DepartmentPage from "~/routes/home/CompanyManagement/Department/DepartmentPage";
 import PersonnelPage from "~/routes/home/CompanyManagement/Personnel/PersonnelPage";
 import PositionPage from "~/routes/home/CompanyManagement/Position/PositionPage";
+import SalaryPage from "~/routes/home/CompanyManagement/Salary/SalaryPage";
 import HomePage from "~/routes/home/HomePage";
 import PersonnelManagementPage from "~/routes/home/PersonnelManagement/PersonnelManagementPage";
 import PersonnelRolePage from "~/routes/home/PersonnelRolePage";
-import SalaryPage from "~/routes/home/Salary/SalaryPage";
+import CalculatorPage from "~/routes/home/SalaryManagement/Calculator/CalculatorPage";
+import TimesheetPage from "~/routes/home/SalaryManagement/Timesheet/TimesheetPage";
 import VacationPage from "~/routes/home/Vacation/VacationPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -44,8 +46,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                     <Route path="personnel" element={<PersonnelPage />} />
                     <Route path="department" element={<DepartmentPage />} />
                     <Route path="position" element={<PositionPage />} />
+                    <Route path="salary" element={<SalaryPage />} />
                   </Route>
-                  <Route path="salary-management" element={<SalaryPage />} />
+                  <Route path="salary-management">
+                    <Route path="timesheet" element={<TimesheetPage />} />
+                    <Route path="calculator" element={<CalculatorPage />} />
+                  </Route>
                   <Route path="vacation" element={<VacationPage />} />
                 </Route>
                 <Route path="/*" element={<ErrorPage />} />

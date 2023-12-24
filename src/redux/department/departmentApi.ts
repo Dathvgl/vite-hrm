@@ -3,6 +3,7 @@ import { ListResult } from "~/types/base";
 import {
   DepartmentAllGetType,
   DepartmentPostType,
+  DepartmentPutType,
   DepartmentsGetType,
 } from "~/types/department";
 import { envs } from "~/utils/env";
@@ -49,6 +50,19 @@ export const departmentApi = createApi({
         { type: "DepartmentAll", id: "LIST" },
       ],
     }),
+    putDepartment: builder.mutation<string, DepartmentPutType & { id: string }>(
+      {
+        query: ({ id, ...rest }) => ({
+          url: `/department/${id}`,
+          method: "PUT",
+          body: rest,
+        }),
+        invalidatesTags: () => [
+          { type: "Departments", id: "PARTIAL-LIST" },
+          { type: "DepartmentAll", id: "LIST" },
+        ],
+      }
+    ),
     deleteDepartment: builder.mutation<string, string>({
       query: (arg) => ({ url: `/department/${arg}`, method: "DELETE" }),
       invalidatesTags: (_, __, id) => [
@@ -63,5 +77,6 @@ export const {
   useGetDepartmentsQuery,
   useGetDepartmentAllQuery,
   usePostDepartmentMutation,
+  usePutDepartmentMutation,
   useDeleteDepartmentMutation,
 } = departmentApi;

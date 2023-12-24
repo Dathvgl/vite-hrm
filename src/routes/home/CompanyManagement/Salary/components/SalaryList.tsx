@@ -1,20 +1,23 @@
 import { ReloadOutlined } from "@ant-design/icons";
 import { Button, Table, message } from "antd";
 import { useState } from "react";
-import { useDeletePositionMutation } from "~/redux/position/positionApi";
-import { useGetPositionsQuery } from "~/redux/position/positionApi";
+import {
+  useDeleteSalaryMutation,
+  useGetSalariesQuery,
+} from "~/redux/salary/salaryApi";
 import { TableType } from "~/types/base";
-import { PositionsGetType } from "~/types/position";
+import { SalariesGetType } from "~/types/salary";
+import { capitalize } from "~/utils/convert";
 
-export default function PositionList() {
+export default function SalaryList() {
   const [page, setPage] = useState<number>(1);
-  const { data, refetch } = useGetPositionsQuery(page);
-  const [deletePosition] = useDeletePositionMutation();
+  const { data, refetch } = useGetSalariesQuery(page);
+  const [deleteSalary] = useDeleteSalaryMutation();
   const [messageApi, contextHolder] = message.useMessage();
 
   async function onDelete(id: string) {
     try {
-      await deletePosition(id).unwrap();
+      await deleteSalary(id).unwrap();
 
       messageApi.open({
         type: "success",
@@ -33,7 +36,7 @@ export default function PositionList() {
   return (
     <>
       {contextHolder}
-      <Table<TableType<PositionsGetType>>
+      <Table<TableType<SalariesGetType>>
         bordered
         pagination={{
           total: data?.totalAll,
@@ -59,31 +62,12 @@ export default function PositionList() {
             rowScope: "row",
             render: (text) => <div className="text-center">{text}</div>,
           },
-          { key: "name", title: "Tên chức vụ", dataIndex: "name" },
-          { key: "department", title: "Phòng ban", dataIndex: "department" },
+          { key: "name", title: "Tên lương", dataIndex: "name" },
           {
-            key: "salary",
-            title: "Lương cơ bản",
-            dataIndex: "salary",
-            render: (text) => (
-              <>
-                {`${Number.parseInt(`${text ?? 0}`)
-                  .toLocaleString()
-                  .replaceAll(",", ".")} VND`}
-              </>
-            ),
-          },
-          {
-            key: "allowance",
-            title: "Trợ cấp",
-            dataIndex: "allowance",
-            render: (text) => (
-              <>
-                {`${Number.parseInt(`${text ?? 0}`)
-                  .toLocaleString()
-                  .replaceAll(",", ".")} VND`}
-              </>
-            ),
+            key: "type",
+            title: "Kiểu lương",
+            dataIndex: "type",
+            render: (text) => <>{capitalize(text)}</>,
           },
           {
             key: "actions",

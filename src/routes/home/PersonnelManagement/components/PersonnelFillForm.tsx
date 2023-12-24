@@ -19,17 +19,12 @@ import { useGetDepartmentAllQuery } from "~/redux/department/departmentApi";
 import { usePostPersonnelMutation } from "~/redux/personnel/personnelApi";
 import { useGetPositionAllQuery } from "~/redux/position/positionApi";
 import { PersonnelPostType } from "~/types/personnel";
+import { formatDayjs } from "~/utils/dayjs";
 
 dayjs.extend(customParseFormat);
 
 type FieldType = Omit<PersonnelPostType, "birth"> & {
   birth: dayjs.Dayjs;
-};
-
-const formatDayjs = "DD/MM/YYYY";
-
-const disabledDate: RangePickerProps["disabledDate"] = (current) => {
-  return current && current < dayjs().endOf("day");
 };
 
 export default function PersonnelFillForm() {
@@ -176,7 +171,7 @@ export default function PersonnelFillForm() {
                 name="birth"
                 rules={[{ required: true }]}
               >
-                <DatePicker format={formatDayjs} disabledDate={disabledDate} />
+                <DatePicker format={formatDayjs} />
               </Form.Item>
             </Col>
           </Row>

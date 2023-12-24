@@ -1,15 +1,20 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, FloatButton, Form, Input, Modal, Select, message } from "antd";
-import TextArea from "antd/es/input/TextArea";
 import { useState } from "react";
-import { usePostDepartmentMutation } from "~/redux/department/departmentApi";
-import { useGetSalaryAllQuery } from "~/redux/salary/salaryApi";
-import { DepartmentPostType } from "~/types/department";
+import { usePostSalaryMutation } from "~/redux/salary/salaryApi";
+import { SalaryPostType, SalaryTypeType } from "~/types/salary";
+import { capitalize } from "~/utils/convert";
 
-export default function DepartmentForm() {
-  const { data = [], isSuccess } = useGetSalaryAllQuery();
-  const [postDepartment] = usePostDepartmentMutation();
+const salaryTypes: SalaryTypeType[] = [
+  "time",
+  "revenue",
+  "contract",
+  "product",
+  "bonus",
+];
 
+export default function SalaryForm() {
+  const [postSalary] = usePostSalaryMutation();
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
@@ -19,9 +24,9 @@ export default function DepartmentForm() {
     form.resetFields();
   }
 
-  async function onFinish(values: DepartmentPostType) {
+  async function onFinish(values: SalaryPostType) {
     try {
-      await postDepartment(values).unwrap();
+      await postSalary(values).unwrap();
 
       messageApi.open({
         type: "success",
@@ -48,7 +53,7 @@ export default function DepartmentForm() {
       <Modal
         centered
         open={open}
-        title="Tạo phòng ban"
+        title="Tạo lương"
         onOk={handleOk}
         onCancel={() => setOpen(false)}
         footer={false}
@@ -59,32 +64,29 @@ export default function DepartmentForm() {
           autoComplete="off"
           onFinish={onFinish}
         >
-          <Form.Item<DepartmentPostType>
-            label="Tên phòng ban"
+          <Form.Item<SalaryPostType>
+            label="Tên lương"
             name="name"
             rules={[{ required: true }]}
           >
-            <Input placeholder="Tên phòng ban" />
+            <Input placeholder="Tên lương" />
           </Form.Item>
-          <Form.Item<DepartmentPostType> label="Kiểu lương" name="salary">
-            <Select disabled={!isSuccess} placeholder="Lương">
-              {data.map((item) => (
-                <Select.Option key={item.id} value={item.id}>
-                  {item.name}
+          <Form.Item
+            name="type"
+            label="Kiểu lương"
+            rules={[{ required: true }]}
+          >
+            <Select placeholder="Phòng ban">
+              {salaryTypes.map((item) => (
+                <Select.Option key={item} value={item}>
+                  {capitalize(item)}
                 </Select.Option>
               ))}
             </Select>
           </Form.Item>
-          <Form.Item<DepartmentPostType>
-            label="Mô tả"
-            name="description"
-            rules={[{ required: true }]}
-          >
-            <TextArea rows={4} placeholder="Mô tả" />
-          </Form.Item>
           <div className="text-right">
             <Button type="primary" htmlType="submit">
-              Tạo phòng ban
+              Tạo lương
             </Button>
           </div>
         </Form>

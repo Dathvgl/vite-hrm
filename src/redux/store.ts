@@ -8,6 +8,7 @@ import {
 } from "redux-persist";
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import storage from "redux-persist/lib/storage";
+import { calculatorApi } from "./calculator/calculatorApi";
 import { companyApi } from "./company/companyApi";
 import { departmentApi } from "./department/departmentApi";
 import { personnelApi } from "./personnel/personnelApi";
@@ -15,13 +16,14 @@ import { personnelSlice } from "./personnel/personnelSlice";
 import { positionApi } from "./position/positionApi";
 import { roleApi } from "./role/roleApi";
 import rootReducer, { RootReducer } from "./root";
-import { salarySlice } from "./salary/salarySlice";
+import { salaryApi } from "./salary/salaryApi";
+import { timesheetApi } from "./timesheet/timesheetApi";
 import { vacationApi } from "./vacation/vacationApi";
 
 const persistConfig: PersistConfig<RootReducer> = {
   key: "root",
   storage,
-  blacklist: [personnelSlice.reducerPath, salarySlice.reducerPath],
+  blacklist: [personnelSlice.reducerPath],
   stateReconciler: autoMergeLevel2,
 };
 
@@ -43,7 +45,10 @@ export const store = configureStore({
       .concat(vacationApi.middleware)
       .concat(departmentApi.middleware)
       .concat(positionApi.middleware)
-      .concat(roleApi.middleware),
+      .concat(roleApi.middleware)
+      .concat(salaryApi.middleware)
+      .concat(timesheetApi.middleware)
+      .concat(calculatorApi.middleware),
 });
 
 export const persistor = persistStore(store);

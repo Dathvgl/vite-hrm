@@ -1,3 +1,5 @@
+import { SalaryTypeType } from "./salary";
+
 export type PersonnelType = {
   id: string;
   stt: number;
@@ -37,6 +39,11 @@ export type PersonnelCurrentType = Pick<
   PersonnelType,
   "id" | "name" | "email" | "roles"
 >;
+
+export type PersonnelOneType = Pick<
+  PersonnelType,
+  "id" | "name" | "email" | "department" | "position"
+> & { salary?: number; salaryType?: SalaryTypeType };
 
 export type PersonnelPostType = Omit<
   PersonnelType,

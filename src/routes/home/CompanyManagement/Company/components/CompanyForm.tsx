@@ -14,13 +14,12 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { usePostCompanyMutation } from "~/redux/company/companyApi";
 import { CompanyPostType } from "~/types/company";
+import { formatDayjs } from "~/utils/dayjs";
 
 type FieldType = Omit<CompanyPostType, "constructionYear" | "operationYear"> & {
   constructionYear: dayjs.Dayjs;
   operationYear: dayjs.Dayjs;
 };
-
-const formatDayjs = "DD/MM/YYYY";
 
 export default function CompanyForm() {
   const [open, setOpen] = useState(false);

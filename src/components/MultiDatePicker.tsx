@@ -2,8 +2,7 @@ import { Calendar, Select, Tag } from "antd";
 import dayjs from "dayjs";
 import type { CustomTagProps } from "rc-select/lib/BaseSelect";
 import { useCallback, useState } from "react";
-
-const formatDayjs = "DD/MM/YYYY";
+import { formatDayjs } from "~/utils/dayjs";
 
 type MultipleDatePickerProps = {
   onChange?: (value: string[]) => void;
@@ -55,7 +54,11 @@ export default function MultipleDatePicker({
               fullCellRender={(current) => {
                 if (dates.some((item) => current.isSame(item))) {
                   return (
-                    <div className={"selectedDate"}>{current.format("DD")}</div>
+                    <div>
+                      <span className={"bg-blue-700 rounded-lg px-2 py-1"}>
+                        {current.format("DD")}
+                      </span>
+                    </div>
                   );
                 }
 

@@ -1,6 +1,7 @@
 import { Layout, Spin } from "antd";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSessionStorage } from "usehooks-ts";
 import useAuth from "~/hooks/useAuth";
 import { useGetPersonnelQuery } from "~/redux/personnel/personnelApi";
 import { initUser } from "~/redux/personnel/personnelSlice";
@@ -53,9 +54,14 @@ function AuthLayoutLocation({ children }: OnlyChild) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
+  const [selectedKeys] = useSessionStorage("menu-select", [""]);
+
   useEffect(() => {
     if (pathname == "/") {
-      navigate("/home");
+      const join = selectedKeys.reverse().join("/");
+      const path = "/home" + (join == "" ? "" : `/${join}`);
+
+      navigate(path);
     }
   }, [pathname]);
 

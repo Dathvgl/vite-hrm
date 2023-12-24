@@ -7,6 +7,10 @@ import { useGetPersonnelAllQuery } from "~/redux/personnel/personnelApi";
 import { usePostVacationMutation } from "~/redux/vacation/vacationApi";
 import { VacationPostType } from "~/types/vacation";
 
+// const disabledDate: RangePickerProps["disabledDate"] = (current) => {
+//   return current && current < dayjs().endOf("day");
+// };
+
 export default function VacationForm() {
   const { data = [] } = useGetPersonnelAllQuery();
   const [postVacation] = usePostVacationMutation();

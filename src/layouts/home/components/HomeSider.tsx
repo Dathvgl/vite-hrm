@@ -2,9 +2,12 @@ import {
   ApartmentOutlined,
   AuditOutlined,
   CalendarOutlined,
+  CodeOutlined,
   ContainerOutlined,
   DesktopOutlined,
   DollarOutlined,
+  EuroCircleOutlined,
+  HistoryOutlined,
   HomeOutlined,
   ProjectOutlined,
   TeamOutlined,
@@ -41,7 +44,7 @@ export default function HomeSider({ collapsed }: { collapsed: boolean }) {
         mode="inline"
         onSelect={onSelect}
         selectedKeys={selectedKeys}
-        defaultOpenKeys={["company-management"]}
+        defaultOpenKeys={["company-management", "salary-management"]}
         items={[
           {
             key: "",
@@ -74,12 +77,29 @@ export default function HomeSider({ collapsed }: { collapsed: boolean }) {
                 icon: <ContainerOutlined />,
                 label: "Chức vụ",
               },
+              {
+                key: "salary",
+                icon: <EuroCircleOutlined />,
+                label: "Lương",
+              },
             ],
           },
           {
             key: "salary-management",
             icon: <DollarOutlined />,
-            label: "QL tính lương",
+            label: "QL lương",
+            children: [
+              {
+                key: "timesheet",
+                icon: <HistoryOutlined />,
+                label: "Chấm công",
+              },
+              {
+                key: "calculator",
+                icon: <CodeOutlined />,
+                label: "Bảng lương",
+              },
+            ],
           },
           {
             key: "vacation",

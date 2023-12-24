@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ListResult } from "~/types/base";
 import {
   PersonnelAllGetType,
+  PersonnelOneType,
   PersonnelPostType,
   PersonnelType,
   PersonnelsGetCompany,
@@ -81,6 +82,16 @@ export const personnelApi = createApi({
         } else return [{ type: "Personnels" as const, id: "LIST" }];
       },
     }),
+    getPersonnelOne: builder.query<PersonnelOneType | null, string | undefined>(
+      {
+        query: (arg) => `/personnel/one/${arg}`,
+        providesTags: (result) => {
+          if (result) {
+            return [{ type: "Personnels" as const, id: result.id }];
+          } else return [{ type: "Personnels" as const, id: "LIST" }];
+        },
+      }
+    ),
     postPersonnel: builder.mutation<string, PersonnelPostType>({
       query: (arg) => ({ url: "/personnel", method: "POST", body: arg }),
       invalidatesTags: () => [
@@ -119,6 +130,7 @@ export const {
   useGetPersonnelsQuery,
   useGetPersonnelQuery,
   useGetPersonnelAllQuery,
+  useGetPersonnelOneQuery,
   usePostPersonnelMutation,
   usePutPersonnelCompanyMutation,
   usePutPersonnelRoleMutation,

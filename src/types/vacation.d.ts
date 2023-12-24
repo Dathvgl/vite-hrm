@@ -14,5 +14,5 @@ export type VacationsGetType = {
   updatedAt: number;
 } & VacationType;
 
-export type VacationAllGetType = Pick<VacationType, "id" | "stt" | "name">;
+export type VacationAllGetType = Pick<VacationType, "id" | "stt">;
 export type VacationPostType = Omit<VacationType, "id" | "stt" | "status">;

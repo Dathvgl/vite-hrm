@@ -83,6 +83,16 @@ export default function PositionForm() {
             <InputNumber className="w-full" placeholder="Lương" {...vndInput} />
           </Form.Item>
           <Form.Item<PositionPostType>
+            name="allowance"
+            label="Trợ cấp"
+          >
+            <InputNumber
+              className="w-full"
+              placeholder="Trợ cấp"
+              {...vndInput}
+            />
+          </Form.Item>
+          <Form.Item<PositionPostType>
             label="Phòng ban"
             name="department"
             rules={[{ required: true }]}
