@@ -12,6 +12,7 @@ import {
 } from "antd";
 import { useEffect, useState } from "react";
 import tinycolor from "tinycolor2";
+import RoleBased from "~/components/RoleBased";
 import {
   useGetPersonnelsQuery,
   usePutPersonnelRoleMutation,
@@ -184,15 +185,22 @@ export default function PersonnelRolePage() {
             align: "center",
             fixed: "right",
             render: (_, { id }) => (
-              <Button
-                type="primary"
-                onClick={() => {
-                  setOpen(true);
-                  setCurrent(id);
-                }}
-              >
-                Sửa
-              </Button>
+              <RoleBased includes={["boss", "admin"]}>
+                {({ passed }) => (
+                  <>
+                    <Button
+                      disabled={!passed}
+                      type="primary"
+                      onClick={() => {
+                        setOpen(true);
+                        setCurrent(id);
+                      }}
+                    >
+                      Sửa
+                    </Button>
+                  </>
+                )}
+              </RoleBased>
             ),
           },
         ]}

@@ -48,7 +48,7 @@ export default function PersonnelSearchForm() {
       <Row gutter={24}>
         <Col span={12}>
           <Form.Item<PersonnelFilterSearch> name="position" label="Chức vụ">
-            <Input placeholder="Chức vụ" />
+            <Input disabled placeholder="Chức vụ" />
           </Form.Item>
         </Col>
         <Col className="text-right" span={12}>

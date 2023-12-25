@@ -84,7 +84,7 @@ export default function PersonnelList() {
             align: "center",
             fixed: "right",
             render: (_, { id }) => (
-              <Button danger onClick={() => onDelete(id)}>
+              <Button disabled danger onClick={() => onDelete(id)}>
                 Xóa
               </Button>
             ),

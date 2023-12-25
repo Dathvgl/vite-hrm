@@ -1,5 +1,5 @@
 import { ReloadOutlined } from "@ant-design/icons";
-import { DatePicker, Form, Table } from "antd";
+import { DatePicker, Form, Table, Tag } from "antd";
 import { useState } from "react";
 import { useGetCalculatorsQuery } from "~/redux/calculator/calculatorApi";
 import { TableType } from "~/types/base";
@@ -17,6 +17,7 @@ export default function CalculatorPage() {
     },
     { skip: date?.month == undefined || date?.year == undefined }
   );
+  console.log(data);
 
   return (
     <>
@@ -75,7 +76,6 @@ export default function CalculatorPage() {
               </>
             ),
           },
-          { key: "salaryType", title: "Kiểu lương", dataIndex: "salaryType" },
           {
             key: "salaryCalc",
             title: "Lương nhận",
@@ -97,6 +97,81 @@ export default function CalculatorPage() {
                 {`${Number.parseInt(`${text ?? 0}`)
                   .toLocaleString()
                   .replaceAll(",", ".")} VND`}
+              </>
+            ),
+          },
+          {
+            key: "info",
+            title: "Thông tin",
+            dataIndex: "info",
+            render: (_, record) => (
+              <>
+                <div>{record.salaryTypeName}</div>
+                {record.salaryAllowance
+                  ? record.salaryAllowance > 0 && (
+                      <div>
+                        Phụ cấp:{" "}
+                        {record.salaryAllowance
+                          .toLocaleString()
+                          .replaceAll(",", ".")}{" "}
+                        VND
+                      </div>
+                    )
+                  : undefined}
+                {record.salaryType == "time" ? (
+                  <div>
+                    Số ngày làm: <Tag>{record.info.days.length}</Tag>
+                  </div>
+                ) : record.salaryType == "revenue" ? (
+                  <ul className="px-0">
+                    {record.info.salaries.map((item, index) => (
+                      <li
+                        key={index}
+                        className="flex items-end justify-between"
+                      >
+                        <div>
+                          Doanh thu:{" "}
+                          {item.revenue.toLocaleString().replaceAll(",", ".")}{" "}
+                          VND
+                        </div>
+                        <div>Lợi ích: {item.percentage}%</div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : record.salaryType == "contract" ? (
+                  <ul className="px-0">
+                    {record.info.salaries.map((item, index) => (
+                      <li
+                        key={index}
+                        className="flex items-end justify-between"
+                      >
+                        <div>
+                          Mức khoán:{" "}
+                          {item.base.toLocaleString().replaceAll(",", ".")} VND
+                        </div>
+                        <div>Lợi ích: {item.percentage}%</div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : record.salaryType == "product" ? (
+                  <ul className="px-0">
+                    {record.info.salaries.map((item, index) => (
+                      <li
+                        key={index}
+                        className="flex items-end justify-between"
+                      >
+                        <div>
+                          Đơn giá:{" "}
+                          {item.base.toLocaleString().replaceAll(",", ".")} VND
+                        </div>
+                        <div>
+                          Số lượng:{" "}
+                          {item.quantity.toLocaleString().replaceAll(",", ".")}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : undefined}
               </>
             ),
           },

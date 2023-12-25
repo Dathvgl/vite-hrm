@@ -18,6 +18,8 @@ type TableCompanyType = TableType<{
 
 export default function PersonnelCompany() {
   const transfer = useAppSelector((state) => state.personnelSlice.transfer);
+  console.log(transfer);
+
   const dispatch = useAppDispatch();
 
   const { data: companies = [] } = useGetCompanyAllQuery();

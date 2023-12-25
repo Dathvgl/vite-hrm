@@ -11,6 +11,7 @@ import {
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useState } from "react";
+import RoleBased from "~/components/RoleBased";
 import {
   useDeleteDepartmentMutation,
   useGetDepartmentsQuery,
@@ -174,9 +175,19 @@ export default function DepartmentList() {
             fixed: "right",
             render: (_, { id }) => (
               <Space>
-                <Button type="primary" onClick={() => onUpdate(id)}>
-                  Sửa
-                </Button>
+                <RoleBased includes={["boss", "admin"]}>
+                  {({ passed }) => (
+                    <>
+                      <Button
+                        disabled={!passed}
+                        type="primary"
+                        onClick={() => onUpdate(id)}
+                      >
+                        Sửa
+                      </Button>
+                    </>
+                  )}
+                </RoleBased>
                 <Button disabled danger onClick={() => onDelete(id)}>
                   Xóa
                 </Button>
