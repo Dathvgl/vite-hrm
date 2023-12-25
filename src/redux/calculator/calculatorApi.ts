@@ -12,10 +12,17 @@ export const calculatorApi = createApi({
   endpoints: (builder) => ({
     getCalculators: builder.query<
       ListResult<CalculatorSalaryType> | null,
-      { page: number; month: number | undefined; year: number | undefined }
+      {
+        page: number;
+        month: number | undefined;
+        year: number | undefined;
+        department: string | undefined;
+      }
     >({
       query: (arg) =>
-        `/calculator/salary?page=${arg.page}&month=${arg.month}&year=${arg.year}`,
+        `/calculator/salary?page=${arg.page}&month=${arg.month}&year=${
+          arg.year
+        }${arg.department == undefined ? "" : `&department=${arg.department}`}`,
       providesTags: (result) => {
         if (result) {
           return [

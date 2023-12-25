@@ -11,17 +11,13 @@ import {
   Select,
   message,
 } from "antd";
-import { RangePickerProps } from "antd/es/date-picker";
 import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useState } from "react";
 import { useGetDepartmentAllQuery } from "~/redux/department/departmentApi";
 import { usePostPersonnelMutation } from "~/redux/personnel/personnelApi";
 import { useGetPositionAllQuery } from "~/redux/position/positionApi";
 import { PersonnelPostType } from "~/types/personnel";
 import { formatDayjs } from "~/utils/dayjs";
-
-dayjs.extend(customParseFormat);
 
 type FieldType = Omit<PersonnelPostType, "birth"> & {
   birth: dayjs.Dayjs;
