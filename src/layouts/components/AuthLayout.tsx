@@ -7,6 +7,7 @@ import { useGetPersonnelQuery } from "~/redux/personnel/personnelApi";
 import { initUser } from "~/redux/personnel/personnelSlice";
 import { useAppDispatch, useAppSelector } from "~/redux/store";
 import { OnlyChild } from "~/types/base";
+import { motion } from "framer-motion";
 
 const loading = (
   <Layout className="h-screen flex items-center justify-center">
@@ -67,5 +68,10 @@ function AuthLayoutLocation({ children }: OnlyChild) {
 
   if (pathname == "/") {
     return <>{loading}</>;
-  } else return <>{children}</>;
+  } else
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        {children}
+      </motion.div>
+    );
 }

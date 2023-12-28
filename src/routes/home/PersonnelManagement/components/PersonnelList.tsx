@@ -1,6 +1,7 @@
 import { ReloadOutlined } from "@ant-design/icons";
 import { Button, message, Table } from "antd";
 import { useState } from "react";
+import RoleBased from "~/components/RoleBased";
 import {
   useDeletePersonnelMutation,
   useGetPersonnelsQuery,
@@ -84,9 +85,17 @@ export default function PersonnelList() {
             align: "center",
             fixed: "right",
             render: (_, { id }) => (
-              <Button disabled danger onClick={() => onDelete(id)}>
-                Xóa
-              </Button>
+              <RoleBased includes={["boss", "admin"]}>
+                {({ passed }) => (
+                  <Button
+                    disabled={!passed}
+                    danger
+                    onClick={() => onDelete(id)}
+                  >
+                    Xóa
+                  </Button>
+                )}
+              </RoleBased>
             ),
           },
         ]}

@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { PersistGate } from "redux-persist/lib/integration/react";
+import "simplebar-react/dist/simplebar.min.css";
 import "~/index.css";
 import Layout from "~/layouts/Layout";
 import HomeLayout from "~/layouts/home/HomeLayout";

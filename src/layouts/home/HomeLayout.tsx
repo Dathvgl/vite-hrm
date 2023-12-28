@@ -1,6 +1,7 @@
 import { Layout } from "antd";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
+import SimpleBar from "simplebar-react";
 import HomeHeader from "./components/HomeHeader";
 import HomeSider from "./components/HomeSider";
 
@@ -15,9 +16,11 @@ export default function HomeLayout() {
           collapsed={collapsed}
           callback={() => setCollapsed(!collapsed)}
         />
-        <Layout.Content className="flex-1 p-4 overflow-y-auto">
-          <Outlet />
-        </Layout.Content>
+        <SimpleBar className="h-[calc(100%-64px)]">
+          <Layout.Content className="p-4 ">
+            <Outlet />
+          </Layout.Content>
+        </SimpleBar>
       </Layout>
     </Layout>
   );
