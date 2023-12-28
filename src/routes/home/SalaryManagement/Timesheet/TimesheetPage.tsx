@@ -1,5 +1,5 @@
 import { ReloadOutlined } from "@ant-design/icons";
-import { Col, Form, Input, InputNumber, Row, Select } from "antd";
+import { Col, Form, Input, InputNumber, Row, Select, theme } from "antd";
 import { useEffect } from "react";
 import RoleBased from "~/components/RoleBased";
 import {
@@ -14,6 +14,10 @@ import SalaryRevenue from "./components/SalaryRevenue";
 import TimeCalendar from "./components/TimeCalendar";
 
 export default function TimesheetPage() {
+  const {
+    token: { colorText },
+  } = theme.useToken();
+
   const [form] = Form.useForm();
   const [formInfo] = Form.useForm();
 
@@ -108,12 +112,19 @@ export default function TimesheetPage() {
                 )}
               </Col>
               <Col span={12}>
-                {personnel && (
-                  <TimeCalendar id={personnel.id} passed={passed} />
-                )}
+                {personnel &&
+                  (personnel.company == "" ? (
+                    <div className="flex justify-center items-center h-full">
+                      <strong style={{ color: colorText }}>
+                        Nhân viên chưa được vào công ty
+                      </strong>
+                    </div>
+                  ) : (
+                    <TimeCalendar id={personnel.id} passed={passed} />
+                  ))}
               </Col>
             </Row>
-            {personnel?.salaryType && (
+            {personnel?.salaryType && personnel.company != "" && (
               <>
                 {personnel.salaryType == "revenue" ? (
                   <SalaryRevenue id={personnel.id} />

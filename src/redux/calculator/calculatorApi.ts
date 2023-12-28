@@ -17,12 +17,15 @@ export const calculatorApi = createApi({
         month: number | undefined;
         year: number | undefined;
         department: string | undefined;
+        company: string;
       }
     >({
       query: (arg) =>
         `/calculator/salary?page=${arg.page}&month=${arg.month}&year=${
           arg.year
-        }${arg.department == undefined ? "" : `&department=${arg.department}`}`,
+        }&company=${arg.company}${
+          arg.department == undefined ? "" : `&department=${arg.department}`
+        }`,
       providesTags: (result) => {
         if (result) {
           return [

@@ -8,11 +8,12 @@ import {
   Row,
   Select,
   Table,
-  Tag,
+  Tag
 } from "antd";
 import { useState } from "react";
 import { useGetCalculatorsQuery } from "~/redux/calculator/calculatorApi";
 import { useGetDepartmentAllQuery } from "~/redux/department/departmentApi";
+import { useAppSelector } from "~/redux/store";
 import { TableType } from "~/types/base";
 import { CalculatorSalaryType } from "~/types/calculator";
 
@@ -26,6 +27,9 @@ export default function CalculatorPage() {
   const [date, setDate] = useState<{ month: number; year: number }>();
 
   const department: string | undefined = Form.useWatch("department", form);
+  const userSelection = useAppSelector(
+    (state) => state.personnelSlice.filter.selection
+  );
 
   const { data, refetch } = useGetCalculatorsQuery(
     {
@@ -33,6 +37,7 @@ export default function CalculatorPage() {
       month: date?.month,
       year: date?.year,
       department,
+      company: userSelection,
     },
     { skip: date?.month == undefined || date?.year == undefined }
   );

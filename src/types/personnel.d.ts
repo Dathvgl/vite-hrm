@@ -42,7 +42,7 @@ export type PersonnelCurrentType = Pick<
 
 export type PersonnelOneType = Pick<
   PersonnelType,
-  "id" | "name" | "email" | "department" | "position"
+  "id" | "name" | "email" | "department" | "position" | "company"
 > & { salary?: number; salaryType?: SalaryTypeType };
 
 export type PersonnelPostType = Omit<
