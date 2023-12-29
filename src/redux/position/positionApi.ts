@@ -6,12 +6,14 @@ import {
   PositionsGetType,
 } from "~/types/position";
 import { envs } from "~/utils/env";
+import { prepareHeadersCustom } from "../base";
 
 export const positionApi = createApi({
   reducerPath: "positionApi",
   tagTypes: ["Positions", "PositionAll"],
   baseQuery: fetchBaseQuery({
     baseUrl: envs.VITE_NODE_SERVER + "/api",
+    prepareHeaders: prepareHeadersCustom,
   }),
   endpoints: (builder) => ({
     getPositions: builder.query<ListResult<PositionsGetType>, number>({

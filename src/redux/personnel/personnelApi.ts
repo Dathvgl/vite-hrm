@@ -10,6 +10,7 @@ import {
   PersonnelsGetRoles,
 } from "~/types/personnel";
 import { envs } from "~/utils/env";
+import { prepareHeadersCustom } from "../base";
 import { PersonnelTransferType } from "./personnelSlice";
 
 export type PersonnelQueryType = {
@@ -27,6 +28,7 @@ export const personnelApi = createApi({
   tagTypes: ["Personnels", "PersonnelAll"],
   baseQuery: fetchBaseQuery({
     baseUrl: envs.VITE_NODE_SERVER + "/api",
+    prepareHeaders: prepareHeadersCustom,
   }),
   endpoints: (builder) => ({
     getPersonnels: builder.query<

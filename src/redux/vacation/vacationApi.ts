@@ -6,12 +6,14 @@ import {
   VacationsGetType,
 } from "~/types/vacation";
 import { envs } from "~/utils/env";
+import { prepareHeadersCustom } from "../base";
 
 export const vacationApi = createApi({
   reducerPath: "vacationApi",
   tagTypes: ["Vacations"],
   baseQuery: fetchBaseQuery({
     baseUrl: envs.VITE_NODE_SERVER + "/api",
+    prepareHeaders: prepareHeadersCustom,
   }),
   endpoints: (builder) => ({
     getVacations: builder.query<ListResult<VacationsGetType>, number>({

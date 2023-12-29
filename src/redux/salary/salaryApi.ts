@@ -9,12 +9,14 @@ import {
   SalaryRevenuePostType,
 } from "~/types/salary";
 import { envs } from "~/utils/env";
+import { prepareHeadersCustom } from "../base";
 
 export const salaryApi = createApi({
   reducerPath: "salaryApi",
   tagTypes: ["Salaries", "SalaryAll"],
   baseQuery: fetchBaseQuery({
     baseUrl: envs.VITE_NODE_SERVER + "/api",
+    prepareHeaders: prepareHeadersCustom,
   }),
   endpoints: (builder) => ({
     getSalaries: builder.query<ListResult<SalariesGetType>, number>({

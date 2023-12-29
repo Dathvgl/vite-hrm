@@ -1,12 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { TimesheetPostType, TimesheetTimeGetType } from "~/types/timesheet";
 import { envs } from "~/utils/env";
+import { prepareHeadersCustom } from "../base";
 
 export const timesheetApi = createApi({
   reducerPath: "timesheetApi",
   tagTypes: ["Timesheets", "TimesheetAll"],
   baseQuery: fetchBaseQuery({
     baseUrl: envs.VITE_NODE_SERVER + "/api",
+    prepareHeaders: prepareHeadersCustom,
   }),
   endpoints: (builder) => ({
     getTimesheetCurrent: builder.query<

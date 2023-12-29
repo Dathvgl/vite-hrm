@@ -7,12 +7,14 @@ import {
   DepartmentsGetType,
 } from "~/types/department";
 import { envs } from "~/utils/env";
+import { prepareHeadersCustom } from "../base";
 
 export const departmentApi = createApi({
   reducerPath: "departmentApi",
   tagTypes: ["Departments", "DepartmentAll"],
   baseQuery: fetchBaseQuery({
     baseUrl: envs.VITE_NODE_SERVER + "/api",
+    prepareHeaders: prepareHeadersCustom,
   }),
   endpoints: (builder) => ({
     getDepartments: builder.query<ListResult<DepartmentsGetType>, number>({

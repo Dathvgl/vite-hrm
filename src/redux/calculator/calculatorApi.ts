@@ -2,12 +2,14 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ListResult } from "~/types/base";
 import { CalculatorSalaryType } from "~/types/calculator";
 import { envs } from "~/utils/env";
+import { prepareHeadersCustom } from "../base";
 
 export const calculatorApi = createApi({
   reducerPath: "calculatorApi",
   tagTypes: ["Calculators"],
   baseQuery: fetchBaseQuery({
     baseUrl: envs.VITE_NODE_SERVER + "/api",
+    prepareHeaders: prepareHeadersCustom,
   }),
   endpoints: (builder) => ({
     getCalculators: builder.query<

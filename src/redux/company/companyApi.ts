@@ -6,12 +6,14 @@ import {
   CompanyPostType,
 } from "~/types/company";
 import { envs } from "~/utils/env";
+import { prepareHeadersCustom } from "../base";
 
 export const companyApi = createApi({
   reducerPath: "companyApi",
   tagTypes: ["Companies", "CompanyAll"],
   baseQuery: fetchBaseQuery({
     baseUrl: envs.VITE_NODE_SERVER + "/api",
+    prepareHeaders: prepareHeadersCustom,
   }),
   endpoints: (builder) => ({
     getCompanies: builder.query<ListResult<CompaniesGetType>, number>({
